@@ -1,18 +1,21 @@
 namespace Orbit.CodeAnalysis
 {
-    enum SyntaxKind
+    public enum SyntaxKind
     {
-        NumberToken,
-        WhitespaceToken,
-        PlusToken,
-        SlashToken,
-        StarToken,
-        MinusToken,
-        CloseParenToken,
-        OpenParenToken,
+        // Tokens
         BadToken,
         EndOfFileToken,
-        NumberExpression,
+        WhitespaceToken,
+        NumberToken,
+        PlusToken,
+        MinusToken,
+        SlashToken,
+        StarToken,
+        OpenParenToken,
+        CloseParenToken,
+        
+        // Expressions
+        LiteralExpression,
         BinaryExpression,
         ParenthesizedExpression,
     }

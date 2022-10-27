@@ -1,6 +1,6 @@
 namespace Orbit.CodeAnalysis
 {
-    class Lexer
+    internal sealed class Lexer
     {
         private readonly string _text;
         private int _position;
@@ -38,7 +38,7 @@ namespace Orbit.CodeAnalysis
             _diagnostics.Add($"{diag}\n{errorStr}\n");
         }
 
-        public SyntaxToken NextToken()
+        public SyntaxToken Lex()
         {
             // <numbers>
             // <operators>
@@ -75,18 +75,21 @@ namespace Orbit.CodeAnalysis
                 return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text);
             }
 
-            if(Current == '+')
-                return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+");
-            else if(Current == '-')
-                return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-");
-            else if(Current == '*')
-                return new SyntaxToken(SyntaxKind.StarToken, _position++, "*");
-            else if(Current == '/')
-                return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/");
-            else if(Current == '(')
-                return new SyntaxToken(SyntaxKind.OpenParenToken, _position++, "(");
-            else if(Current == ')')
-                return new SyntaxToken(SyntaxKind.CloseParenToken, _position++, ")");
+            switch (Current)
+            {
+                case '+':
+                    return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+");
+                case '-':
+                    return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-");
+                case '*':
+                    return new SyntaxToken(SyntaxKind.StarToken, _position++, "*");
+                case '/':
+                    return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/");
+                case '(':
+                    return new SyntaxToken(SyntaxKind.OpenParenToken, _position++, "(");
+                case ')':
+                    return new SyntaxToken(SyntaxKind.CloseParenToken, _position++, ")");
+            }
 
             AddDiagWithMarker($"ERROR: Bad character input: '{Current}'");
             

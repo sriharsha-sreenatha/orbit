@@ -1,6 +1,6 @@
 namespace Orbit.CodeAnalysis
 {
-    sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
+    public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
     {
         public ParenthesizedExpressionSyntax(SyntaxToken openParen, ExpressionSyntax exp, SyntaxToken closeParen)
         {

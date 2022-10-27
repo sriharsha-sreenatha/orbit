@@ -1,6 +1,6 @@
 namespace Orbit.CodeAnalysis
 {
-    class Parser
+    internal sealed class Parser
     {
         private readonly SyntaxToken[] _tokens;
         private int _position;
@@ -18,7 +18,7 @@ namespace Orbit.CodeAnalysis
             SyntaxToken token;
             do
             {
-                token = lexer.NextToken();
+                token = lexer.Lex();
 
                 if(token.Kind != SyntaxKind.WhitespaceToken
                 && token.Kind != SyntaxKind.BadToken)
@@ -59,7 +59,7 @@ namespace Orbit.CodeAnalysis
             return current;
         }
 
-        private SyntaxToken Match(SyntaxKind kind)
+        private SyntaxToken MatchToken(SyntaxKind kind)
         {
             if(Current.Kind == kind)
                 return NextToken();
@@ -67,47 +67,46 @@ namespace Orbit.CodeAnalysis
             AddDiagWithMarker($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>", Current);
             return new SyntaxToken(kind, Current.Position, "");
         }
-
-        private ExpressionSyntax ParseExpression()
-        {
-            return ParseTerm();
-        }
     
         public SyntaxTree Parse()
         {
-            var expression = ParseTerm();
-            var eof = Match(SyntaxKind.EndOfFileToken);
+            var expression = ParseExpression();
+            var eof = MatchToken(SyntaxKind.EndOfFileToken);
             return new SyntaxTree(_diagnostics, expression, eof);
         }
 
-        private ExpressionSyntax ParseTerm()
-        {
-            var left = ParseFactor();
-
-            while ( Current.Kind == SyntaxKind.PlusToken ||
-                    Current.Kind == SyntaxKind.MinusToken)
-            {
-                var opToken = NextToken();
-                var right = ParseFactor();
-                left = new BinaryExpressionSyntax(left, opToken, right);
-            }
-            return left;
-        }
-
-        private ExpressionSyntax ParseFactor()
+        private ExpressionSyntax ParseExpression(int parentPrecedence = 0)
         {
             var left = ParsePrimaryExpression();
 
-            while ( Current.Kind == SyntaxKind.StarToken ||
-                    Current.Kind == SyntaxKind.SlashToken)
+            while(true)
             {
-                var opToken = NextToken();
-                var right = ParsePrimaryExpression();
-                left = new BinaryExpressionSyntax(left, opToken, right);
+                var precedence = GetBinaryOperatorPrecedence(Current.Kind);
+                if(precedence == 0 || precedence <= parentPrecedence)
+                    break;
+                
+                var operatorToken = NextToken();
+                var right = ParseExpression(precedence);
+                left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
+
             return left;
         }
 
+        private static int GetBinaryOperatorPrecedence(SyntaxKind kind)
+        {
+            switch(kind)
+            {
+                case SyntaxKind.StarToken:
+                case SyntaxKind.SlashToken:
+                    return 2;
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.MinusToken:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
 
         private ExpressionSyntax ParsePrimaryExpression()
         {
@@ -115,12 +114,12 @@ namespace Orbit.CodeAnalysis
             {
                 var left = NextToken();
                 var expression = ParseExpression();
-                var right = Match(SyntaxKind.CloseParenToken);
+                var right = MatchToken(SyntaxKind.CloseParenToken);
                 return new ParenthesizedExpressionSyntax(left, expression, right);
             }
 
-            var numberToken = Match(SyntaxKind.NumberToken);
-            return new NumberExpressionSyntax(numberToken);
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
         }
     }
 }

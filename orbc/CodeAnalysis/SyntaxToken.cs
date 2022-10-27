@@ -1,6 +1,6 @@
 namespace Orbit.CodeAnalysis
 {
-    class SyntaxToken : SyntaxNode
+    public sealed class SyntaxToken : SyntaxNode
     {
         public SyntaxToken(SyntaxKind kind, int position, string text)
         {

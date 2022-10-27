@@ -1,6 +1,6 @@
 namespace Orbit.CodeAnalysis
 {
-    class Evaluator
+    public sealed class Evaluator
     {
         private readonly ExpressionSyntax _root;
         public Evaluator(ExpressionSyntax root)
@@ -15,8 +15,8 @@ namespace Orbit.CodeAnalysis
 
         private int EvaluateExpression(ExpressionSyntax node)
         {
-            if(node is NumberExpressionSyntax n)
-                return (int) n.NumberToken.Value;
+            if(node is LiteralExpressionSyntax n)
+                return (int) n.LiteralToken.Value;
             if(node is BinaryExpressionSyntax b)
             {
                 var left = EvaluateExpression(b.Left);

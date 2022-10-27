@@ -16,6 +16,7 @@ namespace Orbit.CodeAnalysis
         
         // Expressions
         LiteralExpression,
+        UnaryExpression,
         BinaryExpression,
         ParenthesizedExpression,
     }

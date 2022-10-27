@@ -77,11 +77,22 @@ namespace Orbit.CodeAnalysis
 
         private ExpressionSyntax ParseExpression(int parentPrecedence = 0)
         {
-            var left = ParsePrimaryExpression();
+            ExpressionSyntax left;
+            var unaryOpPrec = Current.Kind.GetUnaryOperatorPrecedence();
+            if(unaryOpPrec != 0 && unaryOpPrec >= parentPrecedence)
+            {
+                var opToken = NextToken();
+                var operand = ParseExpression(unaryOpPrec);
+                left = new UnaryExpressionSyntax(opToken, operand);
+            }
+            else
+            {
+                left = ParsePrimaryExpression();
+            }
 
             while(true)
             {
-                var precedence = GetBinaryOperatorPrecedence(Current.Kind);
+                var precedence = Current.Kind.GetBinaryOperatorPrecedence();
                 if(precedence == 0 || precedence <= parentPrecedence)
                     break;
                 
@@ -91,21 +102,6 @@ namespace Orbit.CodeAnalysis
             }
 
             return left;
-        }
-
-        private static int GetBinaryOperatorPrecedence(SyntaxKind kind)
-        {
-            switch(kind)
-            {
-                case SyntaxKind.StarToken:
-                case SyntaxKind.SlashToken:
-                    return 2;
-                case SyntaxKind.PlusToken:
-                case SyntaxKind.MinusToken:
-                    return 1;
-                default:
-                    return 0;
-            }
         }
 
         private ExpressionSyntax ParsePrimaryExpression()

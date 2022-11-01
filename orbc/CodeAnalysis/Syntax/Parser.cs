@@ -1,4 +1,4 @@
-namespace Orbit.CodeAnalysis
+namespace Orbit.CodeAnalysis.Syntax
 {
     internal sealed class Parser
     {
@@ -106,16 +106,29 @@ namespace Orbit.CodeAnalysis
 
         private ExpressionSyntax ParsePrimaryExpression()
         {
-            if(Current.Kind == SyntaxKind.OpenParenToken)
+            switch (Current.Kind)
             {
-                var left = NextToken();
-                var expression = ParseExpression();
-                var right = MatchToken(SyntaxKind.CloseParenToken);
-                return new ParenthesizedExpressionSyntax(left, expression, right);
-            }
+                case SyntaxKind.OpenParenToken:
+                {
+                    var left = NextToken();
+                    var expression = ParseExpression();
+                    var right = MatchToken(SyntaxKind.CloseParenToken);
+                    return new ParenthesizedExpressionSyntax(left, expression, right);
+                }
 
-            var numberToken = MatchToken(SyntaxKind.NumberToken);
-            return new LiteralExpressionSyntax(numberToken);
+                case SyntaxKind.TrueKeyword:
+                case SyntaxKind.FalseKeyword:
+                {
+                    var keywordToken = NextToken();
+                    var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
+                    return new LiteralExpressionSyntax(keywordToken, value);
+                }
+                default:
+                {
+                    var numberToken = MatchToken(SyntaxKind.NumberToken);
+                    return new LiteralExpressionSyntax(numberToken);
+                }
+            }
         }
     }
 }

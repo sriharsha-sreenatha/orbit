@@ -1,4 +1,4 @@
-namespace Orbit.CodeAnalysis
+namespace Orbit.CodeAnalysis.Syntax
 {
     public sealed class SyntaxTree
     {

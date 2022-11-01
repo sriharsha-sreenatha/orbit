@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Orbit.CodeAnalysis;
+using Orbit.CodeAnalysis.Syntax;
+using Orbit.CodeAnalysis.Binding;
 
 namespace Orbit
 {
@@ -29,6 +31,10 @@ namespace Orbit
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
+                var binder = new Binder();
+                var boundExpression = binder.BindExpression(syntaxTree.Root);
+
+                var diagnostics = binder.Diagnostics.Concat(syntaxTree.Diagnostics).ToArray();
 
                 if(showTree)
                 {
@@ -38,9 +44,9 @@ namespace Orbit
                     Console.ResetColor();
                 }
                 
-                if (!syntaxTree.Diagnostics.Any())
+                if (!diagnostics.Any())
                 {
-                    var eval = new Evaluator(syntaxTree.Root);
+                    var eval = new Evaluator(boundExpression);
                     var result = eval.Evaluate();
                     Console.WriteLine(result);
                 }
@@ -48,7 +54,7 @@ namespace Orbit
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
 
-                    foreach (var diag in syntaxTree.Diagnostics)
+                    foreach (var diag in diagnostics)
                         Console.WriteLine(diag);
 
                     Console.ResetColor();

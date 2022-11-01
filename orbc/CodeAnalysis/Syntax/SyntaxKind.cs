@@ -1,4 +1,4 @@
-namespace Orbit.CodeAnalysis
+namespace Orbit.CodeAnalysis.Syntax
 {
     public enum SyntaxKind
     {
@@ -11,9 +11,17 @@ namespace Orbit.CodeAnalysis
         MinusToken,
         SlashToken,
         StarToken,
+        NotToken,
+        DoubleAmpersandToken,
+        DoublePipeToken,
         OpenParenToken,
         CloseParenToken,
+        IdentifierToken,
         
+        // Keywords
+        TrueKeyword,
+        FalseKeyword,
+
         // Expressions
         LiteralExpression,
         UnaryExpression,

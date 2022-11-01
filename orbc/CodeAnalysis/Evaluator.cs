@@ -1,56 +1,63 @@
+using Orbit.CodeAnalysis.Syntax;
+using Orbit.CodeAnalysis.Binding;
+
 namespace Orbit.CodeAnalysis
 {
-    public sealed class Evaluator
+    internal sealed class Evaluator
     {
-        private readonly ExpressionSyntax _root;
-        public Evaluator(ExpressionSyntax root)
+        private readonly BoundExpression _root;
+        public Evaluator(BoundExpression root)
         {
             _root = root;
         }
 
-        public int Evaluate()
+        public object Evaluate()
         {
             return EvaluateExpression(_root);
         }
 
-        private int EvaluateExpression(ExpressionSyntax node)
+        private object EvaluateExpression(BoundExpression node)
         {
-            if(node is LiteralExpressionSyntax n)
-                return (int) n.LiteralToken.Value;
+            if(node is BoundLiteralExpression n)
+                return n.Value;
             
-            if(node is UnaryExpressionSyntax u)
+            if(node is BoundUnaryExpression u)
             {
                 var operand = EvaluateExpression(u.Operand);
 
-                if(u.OperatorToken.Kind == SyntaxKind.PlusToken)
-                    return operand;
-                else if(u.OperatorToken.Kind == SyntaxKind.MinusToken)
-                    return -operand;
+                if(u.OperatorKind == BoundUnaryOperatorKind.Identity)
+                    return (int)operand;
+                else if(u.OperatorKind == BoundUnaryOperatorKind.Negation)
+                    return -(int)operand;
+                else if(u.OperatorKind == BoundUnaryOperatorKind.LogicalNegation)
+                    return !(bool)operand;
                 else
-                    throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}\n");
+                    throw new Exception($"Unexpected unary operator {u.OperatorKind}\n");
             }
 
-            if(node is BinaryExpressionSyntax b)
+            if(node is BoundBinaryExpression b)
             {
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);
 
-                switch (b.OperatorToken.Kind)
+                switch (b.OperatorKind)
                 {
-                    case SyntaxKind.PlusToken:
-                        return left + right;
-                    case SyntaxKind.MinusToken:
-                        return left - right;
-                    case SyntaxKind.StarToken:
-                        return left * right;
-                    case SyntaxKind.SlashToken:
-                        return left / right;
+                    case BoundBinaryOperatorKind.Addition:
+                        return (int)left + (int)right;
+                    case BoundBinaryOperatorKind.Subtraction:
+                        return (int)left - (int)right;
+                    case BoundBinaryOperatorKind.Multiplication:
+                        return (int)left * (int)right;
+                    case BoundBinaryOperatorKind.Division:
+                        return (int)left / (int)right;
+                    case BoundBinaryOperatorKind.LogicalAnd:
+                        return (bool)left && (bool)right;
+                    case BoundBinaryOperatorKind.LogicalOr:
+                        return (bool)left || (bool)right;
                     default:
-                        throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}\n");
+                        throw new Exception($"Unexpected binary operator {b.OperatorKind}\n");
                 }
             }
-            if(node is ParenthesizedExpressionSyntax p)
-                return EvaluateExpression(p.Expression);
             
             throw new Exception($"Unexpected node {node.Kind}\n");
         }

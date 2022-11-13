@@ -25,14 +25,17 @@ namespace Orbit.CodeAnalysis
             {
                 var operand = EvaluateExpression(u.Operand);
 
-                if(u.OperatorKind == BoundUnaryOperatorKind.Identity)
-                    return (int)operand;
-                else if(u.OperatorKind == BoundUnaryOperatorKind.Negation)
-                    return -(int)operand;
-                else if(u.OperatorKind == BoundUnaryOperatorKind.LogicalNegation)
-                    return !(bool)operand;
-                else
-                    throw new Exception($"Unexpected unary operator {u.OperatorKind}\n");
+                switch (u.Operator.Kind)
+                {
+                    case BoundUnaryOperatorKind.Identity:
+                        return (int)operand;
+                    case BoundUnaryOperatorKind.Negation:
+                        return -(int)operand;
+                    case BoundUnaryOperatorKind.LogicalNegation:
+                        return !(bool)operand;
+                    default:
+                        throw new Exception($"Unexpected unary operator {u.Operator.Kind}\n");
+                }
             }
 
             if(node is BoundBinaryExpression b)
@@ -40,7 +43,7 @@ namespace Orbit.CodeAnalysis
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);
 
-                switch (b.OperatorKind)
+                switch (b.Operator.Kind)
                 {
                     case BoundBinaryOperatorKind.Addition:
                         return (int)left + (int)right;
@@ -55,7 +58,7 @@ namespace Orbit.CodeAnalysis
                     case BoundBinaryOperatorKind.LogicalOr:
                         return (bool)left || (bool)right;
                     default:
-                        throw new Exception($"Unexpected binary operator {b.OperatorKind}\n");
+                        throw new Exception($"Unexpected binary operator {b.Operator.Kind}\n");
                 }
             }
             

@@ -27,5 +27,8 @@ namespace Orbit.CodeAnalysis.Syntax
         UnaryExpression,
         BinaryExpression,
         ParenthesizedExpression,
+        AndKeyword,
+        OrKeyword,
+        NotKeyword,
     }
 }

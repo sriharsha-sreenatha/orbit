@@ -2,15 +2,15 @@ namespace Orbit.CodeAnalysis.Binding
 {
     internal sealed class BoundUnaryExpression : BoundExpression
     {
-        public BoundUnaryExpression(BoundUnaryOperatorKind opKind, BoundExpression operand)
+        public BoundUnaryExpression(BoundUnaryOperator op, BoundExpression operand)
         {
-            OperatorKind = opKind;
+            Operator = op;
             Operand = operand;
         }
 
         public override BoundNodeKind Kind => BoundNodeKind.UnaryExpression;
         public override Type Type => Operand.Type;
-        public BoundUnaryOperatorKind OperatorKind { get; }
+        public BoundUnaryOperator Operator { get; }
         public BoundExpression Operand { get; }
     }
 }

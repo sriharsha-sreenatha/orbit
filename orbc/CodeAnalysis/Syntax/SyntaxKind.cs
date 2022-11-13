@@ -30,5 +30,7 @@ namespace Orbit.CodeAnalysis.Syntax
         AndKeyword,
         OrKeyword,
         NotKeyword,
+        NotEqualsToken,
+        DoubleEqualsToken,
     }
 }

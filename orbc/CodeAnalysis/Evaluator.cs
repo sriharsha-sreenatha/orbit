@@ -57,6 +57,10 @@ namespace Orbit.CodeAnalysis
                         return (bool)left && (bool)right;
                     case BoundBinaryOperatorKind.LogicalOr:
                         return (bool)left || (bool)right;
+                    case BoundBinaryOperatorKind.IsEquals:
+                        return Equals(left, right);
+                    case BoundBinaryOperatorKind.IsNotEquals:
+                        return !Equals(left, right);
                     default:
                         throw new Exception($"Unexpected binary operator {b.Operator.Kind}\n");
                 }

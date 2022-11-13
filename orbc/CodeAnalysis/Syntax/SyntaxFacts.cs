@@ -10,7 +10,7 @@ namespace Orbit.CodeAnalysis.Syntax
                 case SyntaxKind.MinusToken:
                 case SyntaxKind.NotToken:
                 case SyntaxKind.NotKeyword:
-                    return 5;
+                    return 6;
                 default:
                     return 0;
             }
@@ -22,10 +22,14 @@ namespace Orbit.CodeAnalysis.Syntax
             {
                 case SyntaxKind.StarToken:
                 case SyntaxKind.SlashToken:
-                    return 4;
+                    return 5;
                 
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
+                    return 4;
+
+                case SyntaxKind.DoubleEqualsToken:
+                case SyntaxKind.NotEqualsToken:
                     return 3;
                 
                 case SyntaxKind.DoubleAmpersandToken:

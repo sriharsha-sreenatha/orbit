@@ -8,5 +8,7 @@ namespace Orbit.CodeAnalysis.Binding
         Division,
         LogicalAnd,
         LogicalOr,
+        IsEquals,
+        IsNotEquals,
     }
 }

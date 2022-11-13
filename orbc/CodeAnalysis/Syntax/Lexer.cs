@@ -101,6 +101,8 @@ namespace Orbit.CodeAnalysis.Syntax
                 case ')':
                     return new SyntaxToken(SyntaxKind.CloseParenToken, _position++, ")");
                 case '!':
+                    if(LookAhead == '=')
+                        return new SyntaxToken(SyntaxKind.NotEqualsToken, _position+=2, "!=");
                     return new SyntaxToken(SyntaxKind.NotToken, _position++, "!");
                 case '&':
                     if(LookAhead == '&')
@@ -109,6 +111,10 @@ namespace Orbit.CodeAnalysis.Syntax
                 case '|':
                     if(LookAhead == '|')
                         return new SyntaxToken(SyntaxKind.DoublePipeToken, _position+=2, "||");
+                    break;
+                case '=':
+                    if(LookAhead == '=')
+                        return new SyntaxToken(SyntaxKind.DoubleEqualsToken, _position+=2, "==");
                     break;
             }
 

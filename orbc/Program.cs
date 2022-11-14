@@ -31,10 +31,10 @@ namespace Orbit
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
-                var binder = new Binder();
-                var boundExpression = binder.BindExpression(syntaxTree.Root);
+                var compilation = new Compilation(syntaxTree);
+                var result = compilation.Evaluate();
 
-                var diagnostics = binder.Diagnostics.Concat(syntaxTree.Diagnostics).ToArray();
+                var diagnostics = result.Diagnostics;
 
                 if(showTree)
                 {
@@ -46,9 +46,7 @@ namespace Orbit
                 
                 if (!diagnostics.Any())
                 {
-                    var eval = new Evaluator(boundExpression);
-                    var result = eval.Evaluate();
-                    Console.WriteLine(result);
+                    Console.WriteLine(result.Value);
                 }
                 else
                 {

@@ -1,0 +1,12 @@
+H:\orbit\Orbit\bin\Debug\net6.0\Orbit.deps.json
+H:\orbit\Orbit\bin\Debug\net6.0\Orbit.dll
+H:\orbit\Orbit\bin\Debug\net6.0\Orbit.pdb
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.csproj.AssemblyReference.cache
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.GeneratedMSBuildEditorConfig.editorconfig
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.AssemblyInfoInputs.cache
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.AssemblyInfo.cs
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.csproj.CoreCompileInputs.cache
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.dll
+H:\orbit\Orbit\obj\Debug\net6.0\refint\Orbit.dll
+H:\orbit\Orbit\obj\Debug\net6.0\Orbit.pdb
+H:\orbit\Orbit\obj\Debug\net6.0\ref\Orbit.dll

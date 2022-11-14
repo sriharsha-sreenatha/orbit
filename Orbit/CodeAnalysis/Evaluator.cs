@@ -1,4 +1,3 @@
-using Orbit.CodeAnalysis.Syntax;
 using Orbit.CodeAnalysis.Binding;
 
 namespace Orbit.CodeAnalysis

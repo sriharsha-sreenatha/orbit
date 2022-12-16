@@ -31,15 +31,6 @@ namespace Orbit.CodeAnalysis.Syntax
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
-        // private void AddDiagWithMarker(string errorStr, SyntaxToken token)
-        // {
-        //     string diag = _text+"\n";
-        //     for(int i=0; i<token.Position; i++)
-        //         diag += " ";
-        //     diag += "^";
-        //     _diagnostics.Add($"{diag}\n{errorStr}\n");
-        // }
-
         public DiagnosticBag Diagnostics => _diagnostics;
 
         private SyntaxToken Peek(int offset)
@@ -65,7 +56,6 @@ namespace Orbit.CodeAnalysis.Syntax
                 return NextToken();
             
             _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
-            // AddDiagWithMarker($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>", Current);
             return new SyntaxToken(kind, Current.Position, "");
         }
     
@@ -76,14 +66,33 @@ namespace Orbit.CodeAnalysis.Syntax
             return new SyntaxTree(_diagnostics, expression, eof);
         }
 
-        private ExpressionSyntax ParseExpression(int parentPrecedence = 0)
+        private ExpressionSyntax ParseExpression()
+        {
+            return ParseAssignmentExpression();
+        }
+
+        private ExpressionSyntax ParseAssignmentExpression()
+        {
+            if(Peek(0).Kind == SyntaxKind.IdentifierToken
+            && Peek(1).Kind == SyntaxKind.EqualsToken)
+            {
+                var identifierToken = NextToken();
+                var operatorToken = NextToken();
+                var right = ParseAssignmentExpression();
+                return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
+            }
+
+            return ParseBinaryExpression();
+        }
+
+        private ExpressionSyntax ParseBinaryExpression(int parentPrecedence = 0)
         {
             ExpressionSyntax left;
             var unaryOpPrec = Current.Kind.GetUnaryOperatorPrecedence();
             if(unaryOpPrec != 0 && unaryOpPrec >= parentPrecedence)
             {
                 var opToken = NextToken();
-                var operand = ParseExpression(unaryOpPrec);
+                var operand = ParseBinaryExpression(unaryOpPrec);
                 left = new UnaryExpressionSyntax(opToken, operand);
             }
             else
@@ -98,7 +107,7 @@ namespace Orbit.CodeAnalysis.Syntax
                     break;
                 
                 var operatorToken = NextToken();
-                var right = ParseExpression(precedence);
+                var right = ParseBinaryExpression(precedence);
                 left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
 
@@ -124,6 +133,13 @@ namespace Orbit.CodeAnalysis.Syntax
                     var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
                     return new LiteralExpressionSyntax(keywordToken, value);
                 }
+                
+                case SyntaxKind.IdentifierToken:
+                {
+                    var identifierToken = NextToken();
+                    return new NameExpressionSyntax(identifierToken);
+                }
+
                 default:
                 {
                     var numberToken = MatchToken(SyntaxKind.NumberToken);

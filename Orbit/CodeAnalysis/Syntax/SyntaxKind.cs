@@ -16,21 +16,24 @@ namespace Orbit.CodeAnalysis.Syntax
         DoublePipeToken,
         OpenParenToken,
         CloseParenToken,
+        NotEqualsToken,
+        DoubleEqualsToken,
+        EqualsToken,
         IdentifierToken,
         
         // Keywords
         TrueKeyword,
         FalseKeyword,
-
-        // Expressions
-        LiteralExpression,
-        UnaryExpression,
-        BinaryExpression,
-        ParenthesizedExpression,
         AndKeyword,
         OrKeyword,
         NotKeyword,
-        NotEqualsToken,
-        DoubleEqualsToken,
+
+        // Expressions
+        LiteralExpression,
+        NameExpression,
+        AssignmentExpression,
+        UnaryExpression,
+        BinaryExpression,
+        ParenthesizedExpression,
     }
 }

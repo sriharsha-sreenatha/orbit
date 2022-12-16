@@ -127,7 +127,7 @@ namespace Orbit.CodeAnalysis.Syntax
                         _position+=2;
                         return new SyntaxToken(SyntaxKind.DoubleEqualsToken, start, "==");
                     }
-                    break;
+                    return new SyntaxToken(SyntaxKind.EqualsToken, _position++, "=");
             }
 
             _diagnostics.ReportBadCharacter(_position, Current);

@@ -50,12 +50,30 @@ namespace Orbit
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
 
                     foreach (var diag in diagnostics)
-                        Console.WriteLine(diag);
+                    {
+                        Console.WriteLine();
 
-                    Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine(diag);
+                        Console.ResetColor();
+
+                        var prefix = line.Substring(0, diag.Span.Start);
+                        var error = line.Substring(diag.Span.Start, diag.Span.Length);
+                        var suffix = line.Substring(diag.Span.End);
+
+                        Console.Write("   ");
+                        Console.Write(prefix);
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write(error);
+                        Console.ResetColor();
+                        Console.Write(suffix);
+
+                        Console.WriteLine();
+                    }
+                    Console.WriteLine();
+
                 }
             }
         }

@@ -5,14 +5,14 @@ namespace Orbit.CodeAnalysis.Syntax
         private readonly string _text;
         private int _position;
 
-        private List<string> _diagnostics = new List<string>();
+        private DiagnosticBag _diagnostics = new DiagnosticBag();
         
         public Lexer(string text)
         {
             _text = text;
         }
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public DiagnosticBag Diagnostics => _diagnostics;
 
         private char Current => Peek(0);
         private char LookAhead => Peek(1);
@@ -36,7 +36,7 @@ namespace Orbit.CodeAnalysis.Syntax
             for(int i=0; i<_position; i++)
                 diag += " ";
             diag += "^";
-            _diagnostics.Add($"{diag}\n{errorStr}\n");
+            // _diagnostics.Add($"{diag}\n{errorStr}\n");
         }
 
         public SyntaxToken Lex()
@@ -51,23 +51,24 @@ namespace Orbit.CodeAnalysis.Syntax
                 return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0");
             }
 
+            var start = _position;
+
             if(char.IsDigit(Current))
             {
-                var start = _position;
                 while(char.IsDigit(Current))
                     Next();
                 var len = _position - start;
                 var text = _text.Substring(start, len);
                 if(!int.TryParse(text, out var value))
                 {
-                    AddDiagWithMarker($"ERROR: The number cannot be represented by int32: '{_text}'");
+                    _diagnostics.ReportInvalidNumber(new TextSpan(start, len), _text, typeof(int));
+                    // AddDiagWithMarker($"ERROR: The number cannot be represented by int32: '{_text}'");
                 }
                 return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
 
             if(char.IsWhiteSpace(Current))
             {
-                var start = _position;
                 while(char.IsWhiteSpace(Current))
                     Next();
                 var len = _position - start;
@@ -77,7 +78,6 @@ namespace Orbit.CodeAnalysis.Syntax
 
             if(char.IsLetter(Current))
             {
-                var start = _position;
                 while(char.IsLetter(Current))
                     Next();
                 var len = _position - start;
@@ -102,23 +102,36 @@ namespace Orbit.CodeAnalysis.Syntax
                     return new SyntaxToken(SyntaxKind.CloseParenToken, _position++, ")");
                 case '!':
                     if(LookAhead == '=')
-                        return new SyntaxToken(SyntaxKind.NotEqualsToken, _position+=2, "!=");
+                    {
+                        _position+=2;
+                        return new SyntaxToken(SyntaxKind.NotEqualsToken, start, "!=");
+                    }
                     return new SyntaxToken(SyntaxKind.NotToken, _position++, "!");
                 case '&':
                     if(LookAhead == '&')
-                        return new SyntaxToken(SyntaxKind.DoubleAmpersandToken, _position+=2, "&&");
+                    {
+                        _position+=2;
+                        return new SyntaxToken(SyntaxKind.DoubleAmpersandToken, start, "&&");
+                    }
                     break;
                 case '|':
                     if(LookAhead == '|')
-                        return new SyntaxToken(SyntaxKind.DoublePipeToken, _position+=2, "||");
+                    {
+                        _position+=2;
+                        return new SyntaxToken(SyntaxKind.DoublePipeToken, start, "||");
+                    }
                     break;
                 case '=':
                     if(LookAhead == '=')
-                        return new SyntaxToken(SyntaxKind.DoubleEqualsToken, _position+=2, "==");
+                    {
+                        _position+=2;
+                        return new SyntaxToken(SyntaxKind.DoubleEqualsToken, start, "==");
+                    }
                     break;
             }
 
-            AddDiagWithMarker($"ERROR: Bad character input: '{Current}'");
+            _diagnostics.ReportBadCharacter(_position, Current);
+            // AddDiagWithMarker($"ERROR: Bad character input: '{Current}'");
             
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
         }

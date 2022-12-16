@@ -7,7 +7,7 @@ namespace Orbit.CodeAnalysis.Syntax
 
         private string _text;
 
-        private List<string> _diagnostics = new List<string>();
+        private DiagnosticBag _diagnostics = new DiagnosticBag();
 
         public Parser(string text)
         {
@@ -31,16 +31,16 @@ namespace Orbit.CodeAnalysis.Syntax
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
-        private void AddDiagWithMarker(string errorStr, SyntaxToken token)
-        {
-            string diag = _text+"\n";
-            for(int i=0; i<token.Position; i++)
-                diag += " ";
-            diag += "^";
-            _diagnostics.Add($"{diag}\n{errorStr}\n");
-        }
+        // private void AddDiagWithMarker(string errorStr, SyntaxToken token)
+        // {
+        //     string diag = _text+"\n";
+        //     for(int i=0; i<token.Position; i++)
+        //         diag += " ";
+        //     diag += "^";
+        //     _diagnostics.Add($"{diag}\n{errorStr}\n");
+        // }
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public DiagnosticBag Diagnostics => _diagnostics;
 
         private SyntaxToken Peek(int offset)
         {
@@ -64,7 +64,8 @@ namespace Orbit.CodeAnalysis.Syntax
             if(Current.Kind == kind)
                 return NextToken();
             
-            AddDiagWithMarker($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>", Current);
+            _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
+            // AddDiagWithMarker($"ERROR: Unexpected token <{Current.Kind}>, expected <{kind}>", Current);
             return new SyntaxToken(kind, Current.Position, "");
         }
     

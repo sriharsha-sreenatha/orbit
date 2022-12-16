@@ -21,6 +21,7 @@ namespace Orbit.CodeAnalysis.Syntax
 
         public int Position { get; }
         public string Text { get; }
+        public TextSpan Span => new TextSpan(Position, Text.Length);
 
         public object Value { get; }
 

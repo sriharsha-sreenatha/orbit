@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Orbit.CodeAnalysis.Syntax
 {
     public sealed class BinaryExpressionSyntax : ExpressionSyntax

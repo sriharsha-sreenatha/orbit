@@ -1,3 +1,5 @@
+using System;
+
 namespace Orbit.CodeAnalysis
 {
     public sealed class VariableSymbol

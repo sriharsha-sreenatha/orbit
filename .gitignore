@@ -1,3 +1,7 @@
 orbc/bin/*
 orbc/obj/*
+Orbit/bin/*
+Orbit/obj/*
+Orbit.Tests/bin/*
+Orbit.Tests/obj/*
 .vscode

@@ -1,6 +1,6 @@
 namespace Orbit.CodeAnalysis.Syntax
 {
-    internal static class SyntaxFacts
+    public static class SyntaxFacts
     {
         public static int GetUnaryOperatorPrecedence(this SyntaxKind kind)
         {
@@ -62,6 +62,50 @@ namespace Orbit.CodeAnalysis.Syntax
                 default:
                     return SyntaxKind.IdentifierToken;
             }
+        }
+
+        public static string GetText(SyntaxKind kind)
+        {
+            switch(kind) 
+            {
+                case SyntaxKind.PlusToken: 
+                    return "+";
+                case SyntaxKind.MinusToken: 
+                    return "-";
+                case SyntaxKind.SlashToken: 
+                    return "/";
+                case SyntaxKind.StarToken: 
+                    return "*";
+                case SyntaxKind.NotToken: 
+                    return "!";
+                case SyntaxKind.DoubleAmpersandToken: 
+                    return "&&";
+                case SyntaxKind.DoublePipeToken: 
+                    return "||";
+                case SyntaxKind.OpenParenToken: 
+                    return "(";
+                case SyntaxKind.CloseParenToken: 
+                    return ")";
+                case SyntaxKind.NotEqualsToken: 
+                    return "!=";
+                case SyntaxKind.DoubleEqualsToken: 
+                    return "==";
+                case SyntaxKind.EqualsToken: 
+                    return "=";
+                case SyntaxKind.TrueKeyword:
+                    return "true";
+                case SyntaxKind.FalseKeyword:
+                    return "false";
+                case SyntaxKind.AndKeyword:
+                    return "and";
+                case SyntaxKind.OrKeyword:
+                    return "or";
+                case SyntaxKind.NotKeyword:
+                    return "not";
+                default:
+                    return null;
+            }
+
         }
     }
 }

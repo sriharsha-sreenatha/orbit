@@ -1,5 +1,8 @@
 using Orbit.CodeAnalysis.Syntax;
 using Orbit.CodeAnalysis.Binding;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Orbit.CodeAnalysis
 {

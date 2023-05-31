@@ -74,29 +74,13 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
 
         private static IEnumerable<(SyntaxKind kind, string text)> GetTokens()
         {
-            return new[]
-            {
-                // definitive tokens
-                (SyntaxKind.PlusToken, "+"),
-                (SyntaxKind.MinusToken, "-"),
-                (SyntaxKind.SlashToken, "/"),
-                (SyntaxKind.StarToken, "*"),
-                (SyntaxKind.NotToken, "!"),
-                (SyntaxKind.DoubleAmpersandToken, "&&"),
-                (SyntaxKind.DoublePipeToken, "||"),
-                (SyntaxKind.OpenParenToken, "("),
-                (SyntaxKind.CloseParenToken, ")"),
-                (SyntaxKind.NotEqualsToken, "!="),
-                (SyntaxKind.DoubleEqualsToken, "=="),
-                (SyntaxKind.EqualsToken, "="),
+            var fixedTokens = Enum.GetValues(typeof(SyntaxKind))
+                                .Cast<SyntaxKind>()
+                                .Select(k => (kind: k, text: SyntaxFacts.GetText(k)))
+                                .Where(t => t.text != null);
 
-                (SyntaxKind.TrueKeyword, "true"),
-                (SyntaxKind.FalseKeyword, "false"),
-                (SyntaxKind.AndKeyword, "and"),
-                (SyntaxKind.OrKeyword, "or"), 
-                (SyntaxKind.NotKeyword, "not"),
-                
-                // non-definitive tokens
+            var dynamicTokens = new[]
+            {   
                 (SyntaxKind.NumberToken, "1"),
                 (SyntaxKind.NumberToken, "123"),
                 (SyntaxKind.NumberToken, "455"),
@@ -104,6 +88,8 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
                 (SyntaxKind.IdentifierToken, "a"),
                 (SyntaxKind.IdentifierToken, "abc"),
             };
+
+            return fixedTokens.Concat(dynamicTokens);
         }
 
         private static IEnumerable<(SyntaxKind kind, string text)> GetSeparators()

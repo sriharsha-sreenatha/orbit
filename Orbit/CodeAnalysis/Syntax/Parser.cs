@@ -4,12 +4,11 @@ namespace Orbit.CodeAnalysis.Syntax
 {
     internal sealed class Parser
     {
+        private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
         private readonly SyntaxToken[] _tokens;
         private int _position;
 
         private string _text;
-
-        private DiagnosticBag _diagnostics = new DiagnosticBag();
 
         public Parser(string text)
         {
@@ -121,33 +120,47 @@ namespace Orbit.CodeAnalysis.Syntax
             switch (Current.Kind)
             {
                 case SyntaxKind.OpenParenToken:
-                {
-                    var left = NextToken();
-                    var expression = ParseExpression();
-                    var right = MatchToken(SyntaxKind.CloseParenToken);
-                    return new ParenthesizedExpressionSyntax(left, expression, right);
-                }
+                    return ParseParenthesizedExpression();
 
                 case SyntaxKind.TrueKeyword:
                 case SyntaxKind.FalseKeyword:
-                {
-                    var keywordToken = NextToken();
-                    var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
-                    return new LiteralExpressionSyntax(keywordToken, value);
-                }
-                
-                case SyntaxKind.IdentifierToken:
-                {
-                    var identifierToken = NextToken();
-                    return new NameExpressionSyntax(identifierToken);
-                }
+                    return ParseBooleanExpression();
 
+                case SyntaxKind.NumberToken:
+                    return ParseLiteralExpression();
+                
+
+                case SyntaxKind.IdentifierToken:
                 default:
-                {
-                    var numberToken = MatchToken(SyntaxKind.NumberToken);
-                    return new LiteralExpressionSyntax(numberToken);
-                }
+                    return ParseNameExpression();
             }
+        }
+
+        private ExpressionSyntax ParseParenthesizedExpression()
+        {
+            var left = MatchToken(SyntaxKind.OpenParenToken);
+            var expression = ParseExpression();
+            var right = MatchToken(SyntaxKind.CloseParenToken);
+            return new ParenthesizedExpressionSyntax(left, expression, right);
+        }
+
+        private ExpressionSyntax ParseBooleanExpression()
+        {
+            var isTrue = Current.Kind == SyntaxKind.TrueKeyword;
+            var keywordToken = isTrue ? MatchToken(SyntaxKind.TrueKeyword) : MatchToken(SyntaxKind.FalseKeyword);
+            return new LiteralExpressionSyntax(keywordToken, isTrue);
+        }
+
+        private ExpressionSyntax ParseNameExpression()
+        {
+            var identifierToken = MatchToken(SyntaxKind.IdentifierToken);
+            return new NameExpressionSyntax(identifierToken);
+        }
+
+        private ExpressionSyntax ParseLiteralExpression()
+        {
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
+            return new LiteralExpressionSyntax(numberToken);
         }
     }
 }

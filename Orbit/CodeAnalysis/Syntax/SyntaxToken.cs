@@ -27,10 +27,5 @@ namespace Orbit.CodeAnalysis.Syntax
         public TextSpan Span => new TextSpan(Position, Text.Length);
 
         public object Value { get; }
-
-        public override IEnumerable<SyntaxNode> GetChildren()
-        {
-            return Enumerable.Empty<SyntaxNode>();
-        }
     }
 }

@@ -14,13 +14,5 @@ namespace Orbit.CodeAnalysis.Syntax
         public SyntaxToken OpenParenToken { get; }
         public ExpressionSyntax Expression { get; }
         public SyntaxToken CloseParenToken { get; }
-
-
-        public override IEnumerable<SyntaxNode> GetChildren()
-        {
-            yield return OpenParenToken;
-            yield return Expression;
-            yield return CloseParenToken;
-        }
     }
 }

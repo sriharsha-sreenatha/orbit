@@ -1,8 +1,10 @@
+using Orbit.CodeAnalysis.Text;
+
 namespace Orbit.CodeAnalysis.Syntax
 {
     internal sealed class Lexer
     {
-        private readonly string _text;
+        private readonly SourceText _text;
         private int _position;
         private int _start;
         private object _value;
@@ -10,7 +12,7 @@ namespace Orbit.CodeAnalysis.Syntax
 
         private DiagnosticBag _diagnostics = new DiagnosticBag();
         
-        public Lexer(string text)
+        public Lexer(SourceText text)
         {
             _text = text;
         }
@@ -138,7 +140,7 @@ namespace Orbit.CodeAnalysis.Syntax
                     else
                     {
                         _diagnostics.ReportBadCharacter(_position, Current);
-                        return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
+                        return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.ToString(_position - 1, 1));
                     }
                     break;
             }
@@ -146,9 +148,9 @@ namespace Orbit.CodeAnalysis.Syntax
             var len = _position - _start;
             var text = SyntaxFacts.GetText(_kind);
             if (text == null)
-                text = _text.Substring(_start, len);
+                text = _text.ToString(_start, len);
                         
-            return new SyntaxToken(_kind, _position, text, _value);
+            return new SyntaxToken(_kind, _start, text, _value);
         }
 
         private void ReadIdentifierAndKeywordToken()
@@ -156,7 +158,7 @@ namespace Orbit.CodeAnalysis.Syntax
             while (char.IsLetter(Current))
                 _position++;
             var len = _position - _start;
-            var text = _text.Substring(_start, len);
+            var text = _text.ToString(_start, len);
             _kind = SyntaxFacts.GetKeywordKind(text);
         }
 
@@ -174,11 +176,11 @@ namespace Orbit.CodeAnalysis.Syntax
                 _position++;
             
             var len = _position - _start;
-            var text = _text.Substring(_start, len);
+            var text = _text.ToString(_start, len);
             int value;
             if (!int.TryParse(text, out value))
             {
-                _diagnostics.ReportInvalidNumber(new TextSpan(_start, len), _text, typeof(int));
+                _diagnostics.ReportInvalidNumber(new TextSpan(_start, len), text, typeof(int));
             }
             _kind = SyntaxKind.NumberToken;
             _value = value;

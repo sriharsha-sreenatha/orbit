@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using Orbit.CodeAnalysis.Text;
 
 namespace Orbit.CodeAnalysis.Syntax
 {
     internal sealed class Parser
     {
         private readonly DiagnosticBag _diagnostics = new DiagnosticBag();
+        private readonly SourceText _text;
         private readonly ImmutableArray<SyntaxToken> _tokens;
         private int _position;
 
-        private string _text;
 
-        public Parser(string text)
+        public Parser(SourceText text)
         {
             _text = text;
             var tokens = new List<SyntaxToken>();
@@ -65,7 +66,7 @@ namespace Orbit.CodeAnalysis.Syntax
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EndOfFileToken);
-            return new SyntaxTree(_diagnostics.ToImmutableArray(), expression, eof);
+            return new SyntaxTree(_text, _diagnostics.ToImmutableArray(), expression, eof);
         }
 
         private ExpressionSyntax ParseExpression()

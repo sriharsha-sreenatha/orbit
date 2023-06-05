@@ -1,3 +1,5 @@
+using Orbit.CodeAnalysis.Text;
+
 namespace Orbit.CodeAnalysis
 {
     public sealed class Diagnostic

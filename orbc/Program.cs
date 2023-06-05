@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Orbit.CodeAnalysis;
 using Orbit.CodeAnalysis.Syntax;
 using Orbit.CodeAnalysis.Binding;
+using System.Text;
+using Orbit.CodeAnalysis.Text;
 
 namespace Orbit
 {
@@ -12,27 +14,45 @@ namespace Orbit
         {
             var showTree = false;
             var variables = new Dictionary<VariableSymbol, object>();
+            var textBuilder = new StringBuilder();
 
             while(true)
             {
-                Console.Write("> ");
-                var line = Console.ReadLine();
-                if(string.IsNullOrWhiteSpace(line) || line == "exit")
-                    return;
+                if (textBuilder.Length == 0)
+                    Console.Write("$ ");
+                else
+                    Console.Write("> ");
                 
-                if(line == "#showTree")
+                var input = Console.ReadLine();
+                var isBlank = string.IsNullOrWhiteSpace(input);
+
+                if (textBuilder.Length == 0)
                 {
-                    showTree = !showTree;
-                    Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees.");
-                    continue;
-                }
-                else if(line == "#cls")
-                {
-                    Console.Clear();
-                    continue;
+                    if(input == "exit")
+                        return;
+                    else if (isBlank)
+                        break;
+                    else if (input == "#showTree")
+                    {
+                        showTree = !showTree;
+                        Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees.");
+                        continue;
+                    }
+                    else if (input == "#cls")
+                    {
+                        Console.Clear();
+                        continue;
+                    }
                 }
 
-                var syntaxTree = SyntaxTree.Parse(line);
+                textBuilder.AppendLine(input);
+                var text = textBuilder.ToString();
+
+                var syntaxTree = SyntaxTree.Parse(text);
+
+                if (!isBlank && syntaxTree.Diagnostics.Any())
+                    continue;
+                
                 var compilation = new Compilation(syntaxTree);
                 var result = compilation.Evaluate(variables);
 
@@ -52,18 +72,26 @@ namespace Orbit
                 }
                 else
                 {
-
                     foreach (var diag in diagnostics)
                     {
+                        var lineIndex = syntaxTree.Text.GetLineIndex(diag.Span.Start);
+                        var line = syntaxTree.Text.Lines[lineIndex];
+                        var lineNumber = lineIndex + 1;
+                        var character = diag.Span.Start - line.Start + 1;
+
                         Console.WriteLine();
 
                         Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine($"({lineNumber}:{character})");
                         Console.WriteLine(diag);
                         Console.ResetColor();
 
-                        var prefix = line.Substring(0, diag.Span.Start);
-                        var error = line.Substring(diag.Span.Start, diag.Span.Length);
-                        var suffix = line.Substring(diag.Span.End);
+                        var prefixSpan = TextSpan.FromBounds(line.Start, diag.Span.Start);
+                        var suffixSpan = TextSpan.FromBounds(diag.Span.End, line.End);
+
+                        var prefix = syntaxTree.Text.ToString(prefixSpan);
+                        var error = syntaxTree.Text.ToString(diag.Span);
+                        var suffix = syntaxTree.Text.ToString(suffixSpan);
 
                         Console.Write("   ");
                         Console.Write(prefix);
@@ -77,6 +105,7 @@ namespace Orbit
                     Console.WriteLine();
 
                 }
+                textBuilder.Clear();
             }
         }
     }

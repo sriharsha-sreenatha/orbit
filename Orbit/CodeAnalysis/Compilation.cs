@@ -3,6 +3,7 @@ using Orbit.CodeAnalysis.Binding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Immutable;
 
 namespace Orbit.CodeAnalysis
 {
@@ -20,7 +21,7 @@ namespace Orbit.CodeAnalysis
             var binder = new Binder(variables);
             var boundExpression = binder.BindExpression(SyntaxTree.Root);
             
-            var diagnostics = SyntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+            var diagnostics = SyntaxTree.Diagnostics.Concat(binder.Diagnostics).ToImmutableArray();
             if(diagnostics.Any())
             {
                 return new EvaluationResult(diagnostics, null);
@@ -28,7 +29,7 @@ namespace Orbit.CodeAnalysis
 
             var evaluator = new Evaluator(boundExpression, variables);
             var value = evaluator.Evaluate();
-            return new EvaluationResult(Array.Empty<Diagnostic>(), value);
+            return new EvaluationResult(ImmutableArray<Diagnostic>.Empty, value);
         }
     }
 }

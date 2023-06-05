@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace Orbit.CodeAnalysis.Syntax
 {
@@ -64,7 +65,7 @@ namespace Orbit.CodeAnalysis.Syntax
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EndOfFileToken);
-            return new SyntaxTree(_diagnostics, expression, eof);
+            return new SyntaxTree(_diagnostics.ToImmutableArray(), expression, eof);
         }
 
         private ExpressionSyntax ParseExpression()

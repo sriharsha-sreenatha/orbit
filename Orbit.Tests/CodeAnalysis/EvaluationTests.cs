@@ -40,7 +40,7 @@ namespace Orbit.Tests.CodeAnalysis
             var variables = new Dictionary<VariableSymbol, object>();
             var evaluator = compilation.Evaluate(variables);
 
-            Assert.Equal(0, evaluator.Diagnostics.Count);
+            Assert.Empty(evaluator.Diagnostics);
             Assert.Equal(actualValue, evaluator.Value);
         }
     }

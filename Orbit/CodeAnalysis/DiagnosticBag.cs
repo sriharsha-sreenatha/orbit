@@ -55,9 +55,15 @@ namespace Orbit.CodeAnalysis
             Report(span, message);
         }
 
-        internal void ReportUndefinedName(TextSpan span, string name)
+        public void ReportUndefinedName(TextSpan span, string name)
         {
             var message = $"Variable name '{name}' doesn't exist.";
+            Report(span, message);
+        }
+
+        public void ReportCannotConvert(TextSpan span, Type fromType, Type toType)
+        {
+            var message = $"Cannot convert {fromType} to {toType}.";
             Report(span, message);
         }
     }

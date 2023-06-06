@@ -15,6 +15,7 @@ namespace Orbit
             var showTree = false;
             var variables = new Dictionary<VariableSymbol, object>();
             var textBuilder = new StringBuilder();
+            Compilation previous = null;
 
             while(true)
             {
@@ -45,6 +46,11 @@ namespace Orbit
                         Console.Clear();
                         continue;
                     }
+                    else if (input == "#reset")
+                    {
+                        previous = null;
+                        continue;
+                    }
                 }
 
                 textBuilder.AppendLine(input);
@@ -55,7 +61,10 @@ namespace Orbit
                 if (!isBlank && syntaxTree.Diagnostics.Any())
                     continue;
                 
-                var compilation = new Compilation(syntaxTree);
+                var compilation = previous == null
+                                    ? new Compilation(syntaxTree)
+                                    : previous.ContinueWith(syntaxTree);
+                
                 var result = compilation.Evaluate(variables);
 
                 var diagnostics = result.Diagnostics;
@@ -73,6 +82,8 @@ namespace Orbit
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(result.Value);
                     Console.ResetColor();
+
+                    previous = compilation;
                 }
                 else
                 {

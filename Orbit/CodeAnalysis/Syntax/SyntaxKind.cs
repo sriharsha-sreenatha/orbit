@@ -28,6 +28,9 @@ namespace Orbit.CodeAnalysis.Syntax
         OrKeyword,
         NotKeyword,
 
+        // Nodes
+        CompilationUnit,
+
         // Expressions
         LiteralExpression,
         NameExpression,

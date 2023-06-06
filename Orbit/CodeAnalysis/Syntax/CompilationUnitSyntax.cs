@@ -1,0 +1,16 @@
+namespace Orbit.CodeAnalysis.Syntax
+{
+    public sealed class CompilationUnitSyntax : SyntaxNode
+    {
+        public CompilationUnitSyntax(ExpressionSyntax expression, SyntaxToken endofFileToken)
+        {
+            Expression = expression;
+            EndofFileToken = endofFileToken;
+        }
+        
+        public override SyntaxKind Kind => SyntaxKind.CompilationUnit;
+
+        public ExpressionSyntax Expression { get; }
+        public SyntaxToken EndofFileToken { get; }
+    }
+}

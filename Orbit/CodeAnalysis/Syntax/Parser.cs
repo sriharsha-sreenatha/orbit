@@ -62,11 +62,11 @@ namespace Orbit.CodeAnalysis.Syntax
             return new SyntaxToken(kind, Current.Position, "");
         }
     
-        public SyntaxTree Parse()
+        public CompilationUnitSyntax ParseCompilationUnit()
         {
             var expression = ParseExpression();
             var eof = MatchToken(SyntaxKind.EndOfFileToken);
-            return new SyntaxTree(_text, _diagnostics.ToImmutableArray(), expression, eof);
+            return new CompilationUnitSyntax(expression, eof);
         }
 
         private ExpressionSyntax ParseExpression()

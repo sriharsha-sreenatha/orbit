@@ -15,8 +15,7 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
             var op2Text = SyntaxFacts.GetText(op2);
 
             var text = $"a {op1Text} b {op2Text} c";
-
-            var expression = SyntaxTree.Parse(text).Root;
+            var expression = ParseExpression(text);
 
             if (op1Prec >= op2Prec)
             {
@@ -62,6 +61,13 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
             }
         }
 
+        private static ExpressionSyntax ParseExpression(string text)
+        {
+            var syntaxTree = SyntaxTree.Parse(text);
+            var root = syntaxTree.Root;
+            return root.Expression;
+        }
+
         [Theory]
         [MemberData(nameof(GetUnaryOperatorPairsData))]
         public void Parser_UnaryExpression_HonorsPrecedence(SyntaxKind unaryKind, SyntaxKind binaryKind)
@@ -73,7 +79,7 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
 
             var text = $"{unaryText} a {binaryText} b";
 
-            var expression = SyntaxTree.Parse(text).Root;
+            var expression = ParseExpression(text);
 
             if (unaryPrec >= binaryPrec)
             {

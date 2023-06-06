@@ -18,10 +18,12 @@ namespace Orbit
 
             while(true)
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 if (textBuilder.Length == 0)
                     Console.Write("$ ");
                 else
-                    Console.Write("> ");
+                    Console.Write("» ");
+                Console.ResetColor();
                 
                 var input = Console.ReadLine();
                 var isBlank = string.IsNullOrWhiteSpace(input);
@@ -68,7 +70,9 @@ namespace Orbit
                 
                 if (!diagnostics.Any())
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(result.Value);
+                    Console.ResetColor();
                 }
                 else
                 {

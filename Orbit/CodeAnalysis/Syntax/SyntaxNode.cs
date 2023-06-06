@@ -57,15 +57,29 @@ namespace Orbit.CodeAnalysis.Syntax
             // └──
             // │ 
             // ├──
-
+            var isToConsole = writer == Console.Out;
+            
             var marker = isLast ? "└── " : "├── ";
 
-            writer.Write(indent+marker+node.Kind);
+            writer.Write(indent);
+
+            if (isToConsole)
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            writer.Write(marker);
+
+            if (isToConsole)
+                Console.ForegroundColor = node is SyntaxToken ? ConsoleColor.Yellow : ConsoleColor.Cyan;
+
+            writer.Write(node.Kind);
 
             if(node is SyntaxToken t && t.Value != null )
             {
                 writer.Write(" " + t.Value);
             }
+
+            if(isToConsole)
+                Console.ResetColor();
 
             writer.WriteLine();
 

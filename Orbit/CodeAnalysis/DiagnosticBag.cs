@@ -66,5 +66,17 @@ namespace Orbit.CodeAnalysis
             var message = $"Cannot convert {fromType} to {toType}.";
             Report(span, message);
         }
+
+        public void ReportVariableAlreadyDeclared(TextSpan span, string name)
+        {
+            var message = $"Variable '{name}' already declared.";
+            Report(span, message);
+        }
+
+        public void ReportCannotAssign(TextSpan span, string name)
+        {
+            var message = $"Cannot assign value to read-only variable '{name}'.";
+            Report(span, message);
+        }
     }
 }

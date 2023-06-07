@@ -5,6 +5,7 @@ namespace Orbit.CodeAnalysis.Binding
         // Statements
         BlockStatement,
         ExpressionStatement,
+        VariableDeclaration,
 
         // Expressions
         UnaryExpression,

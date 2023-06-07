@@ -71,10 +71,16 @@ namespace Orbit.CodeAnalysis.Syntax
 
         private StatementSyntax ParseStatement()
         {
-            if (Current.Kind == SyntaxKind.OpenBraceToken)
-                return ParseBlockStatement();
-            
-            return ParseExpressionStatement();
+            switch (Current.Kind)
+            {
+                case SyntaxKind.OpenBraceToken:
+                    return ParseBlockStatement();
+                case SyntaxKind.VarKeyword:
+                case SyntaxKind.LetKeyword:
+                    return ParseVariableDeclaration();
+                default:
+                    return ParseExpressionStatement();
+            }
         }
 
         private BlockStatementSyntax ParseBlockStatement()
@@ -92,6 +98,16 @@ namespace Orbit.CodeAnalysis.Syntax
             var closeBrace = MatchToken(SyntaxKind.CloseBraceToken);
 
             return new BlockStatementSyntax(openBrace, statements.ToImmutable(), closeBrace);
+        }
+
+        private VariableDeclarationSyntax ParseVariableDeclaration()
+        {
+            var expected = Current.Kind == SyntaxKind.VarKeyword ? SyntaxKind.VarKeyword : SyntaxKind.LetKeyword;
+            var keyword = MatchToken(expected);
+            var identifier = MatchToken(SyntaxKind.IdentifierToken);
+            var equalsToken = MatchToken(SyntaxKind.EqualsToken);
+            var expression = ParseExpression();
+            return new VariableDeclarationSyntax(keyword, identifier, equalsToken, expression);
         }
 
         private ExpressionStatementSyntax ParseExpressionStatement()

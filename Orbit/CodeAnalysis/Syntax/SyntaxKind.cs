@@ -29,6 +29,8 @@ namespace Orbit.CodeAnalysis.Syntax
         AndKeyword,
         OrKeyword,
         NotKeyword,
+        VarKeyword,
+        LetKeyword,
 
         // Nodes
         CompilationUnit,
@@ -36,6 +38,7 @@ namespace Orbit.CodeAnalysis.Syntax
         // Statements
         ExpressionStatement,
         BlockStatement,
+        VariableDeclaration,
 
         // Expressions
         LiteralExpression,

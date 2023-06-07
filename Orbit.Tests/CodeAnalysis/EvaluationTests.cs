@@ -19,7 +19,7 @@ namespace Orbit.Tests.CodeAnalysis
         [InlineData("3 * (5 - 2)", 9)]
         [InlineData("(3 * 5) - 2", 13)]
         
-        [InlineData("(a = 10) * a", 100)]
+        [InlineData("{ var a = 0 (a = 10) * a}", 100)]
 
         [InlineData("true", true)]
         [InlineData("false", false)]
@@ -32,8 +32,7 @@ namespace Orbit.Tests.CodeAnalysis
         [InlineData("true and false", false)]
         [InlineData("true or false", true)]
         [InlineData("not true", false)]
-
-        public void Evaulation_GetText_RoundTrips(string text, object actualValue)
+        public void Evaulator_Computes_CorrectValues(string text, object actualValue)
         {
             var expression = SyntaxTree.Parse(text);
             var compilation = new Compilation(expression);

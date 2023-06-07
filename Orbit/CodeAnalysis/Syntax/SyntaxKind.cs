@@ -16,6 +16,8 @@ namespace Orbit.CodeAnalysis.Syntax
         DoublePipeToken,
         OpenParenToken,
         CloseParenToken,
+        OpenBraceToken,
+        CloseBraceToken,
         NotEqualsToken,
         DoubleEqualsToken,
         EqualsToken,
@@ -30,6 +32,10 @@ namespace Orbit.CodeAnalysis.Syntax
 
         // Nodes
         CompilationUnit,
+
+        // Statements
+        ExpressionStatement,
+        BlockStatement,
 
         // Expressions
         LiteralExpression,

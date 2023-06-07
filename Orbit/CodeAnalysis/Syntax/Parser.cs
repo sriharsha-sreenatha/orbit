@@ -64,9 +64,40 @@ namespace Orbit.CodeAnalysis.Syntax
     
         public CompilationUnitSyntax ParseCompilationUnit()
         {
-            var expression = ParseExpression();
+            var statement = ParseStatement();
             var eof = MatchToken(SyntaxKind.EndOfFileToken);
-            return new CompilationUnitSyntax(expression, eof);
+            return new CompilationUnitSyntax(statement, eof);
+        }
+
+        private StatementSyntax ParseStatement()
+        {
+            if (Current.Kind == SyntaxKind.OpenBraceToken)
+                return ParseBlockStatement();
+            
+            return ParseExpressionStatement();
+        }
+
+        private BlockStatementSyntax ParseBlockStatement()
+        {
+            var statements = ImmutableArray.CreateBuilder<StatementSyntax>();
+
+            var openBrace = MatchToken(SyntaxKind.OpenBraceToken);
+
+            while (Current.Kind != SyntaxKind.EndOfFileToken
+                && Current.Kind != SyntaxKind.CloseBraceToken)
+            {
+                var statement = ParseStatement();
+                statements.Add(statement);
+            }
+            var closeBrace = MatchToken(SyntaxKind.CloseBraceToken);
+
+            return new BlockStatementSyntax(openBrace, statements.ToImmutable(), closeBrace);
+        }
+
+        private ExpressionStatementSyntax ParseExpressionStatement()
+        {
+            var expression = ParseExpression();
+            return new ExpressionStatementSyntax(expression);
         }
 
         private ExpressionSyntax ParseExpression()

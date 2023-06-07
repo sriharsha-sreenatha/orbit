@@ -79,6 +79,14 @@ namespace Orbit.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseParenToken;
                     _position++;
                     break;
+                case '{':
+                    _kind = SyntaxKind.OpenBraceToken;
+                    _position++;
+                    break;
+                case '}':
+                    _kind = SyntaxKind.CloseBraceToken;
+                    _position++;
+                    break;
                 case '!':
                     _position++;
                     if(Current == '=')

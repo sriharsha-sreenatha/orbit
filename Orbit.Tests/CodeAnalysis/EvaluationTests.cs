@@ -42,5 +42,52 @@ namespace Orbit.Tests.CodeAnalysis
             Assert.Empty(evaluator.Diagnostics);
             Assert.Equal(actualValue, evaluator.Value);
         }
+
+        [Fact]
+        public void Evaluator_VariableDeclaration_Reports_Redeclaration()
+        {
+            var text = @"
+            {
+                var x = 10
+                var y = 100
+                {
+                    var x = 10
+                }
+                var [x] = 5
+            }
+            ";
+
+            var diagnostic = @"
+                Variable 'x' already declared.
+            ";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        private void AssertHasDiagnostics(string text, string diagnosticText)
+        {
+            var annotatedText = AnnotatedText.Parse(text);
+            var syntaxTree = SyntaxTree.Parse(annotatedText.Text);
+            var compilation = new Compilation(syntaxTree);
+            var result = compilation.Evaluate(new Dictionary<VariableSymbol, object>());
+
+            var expectedDiagnostics = AnnotatedText.UnindentLines(diagnosticText);
+
+            if (annotatedText.Spans.Length != expectedDiagnostics.Length)
+                throw new Exception("ERROR: Must have same number of markings and diagnostics messages.");
+
+            Assert.Equal(expectedDiagnostics.Length, result.Diagnostics.Length);
+
+            for (int i=0; i < expectedDiagnostics.Length; i++)
+            {
+                var expectedMessage = expectedDiagnostics[i];
+                var actualMessage = result.Diagnostics[i].Message;
+                Assert.Equal(expectedMessage, actualMessage);
+
+                var expectedSpan = annotatedText.Spans[i];
+                var actualSpan = result.Diagnostics[i].Span;
+                Assert.Equal(expectedSpan, actualSpan);
+            }
+        }
     }
 }

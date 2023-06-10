@@ -7,6 +7,7 @@ namespace Orbit.CodeAnalysis.Binding
         ExpressionStatement,
         VariableDeclaration,
         IfStatement,
+        WhileStatement,
 
         // Expressions
         UnaryExpression,

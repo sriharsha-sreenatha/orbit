@@ -38,6 +38,7 @@ namespace Orbit.CodeAnalysis.Syntax
         LetKeyword,
         IfKeyword,
         ElseKeyword,
+        WhileKeyword,
 
         // Nodes
         CompilationUnit,
@@ -48,6 +49,7 @@ namespace Orbit.CodeAnalysis.Syntax
         VariableDeclaration,
         IfStatement,
         ElseClause,
+        WhileStatement,
 
         // Expressions
         LiteralExpression,

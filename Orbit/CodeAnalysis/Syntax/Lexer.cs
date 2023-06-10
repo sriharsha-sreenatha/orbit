@@ -125,6 +125,30 @@ namespace Orbit.CodeAnalysis.Syntax
                         _kind = SyntaxKind.EqualsToken;
                     }
                     break;
+                case '<':
+                    _position++;
+                    if(Current == '=')
+                    {
+                        _kind = SyntaxKind.LessOrEqualsToken;
+                        _position++;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.LessToken;
+                    }
+                    break;
+                case '>':
+                    _position++;
+                    if(Current == '=')
+                    {
+                        _kind = SyntaxKind.GreaterOrEqualsToken;
+                        _position++;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.GreaterToken;
+                    }
+                    break;
                 case '0': case '1': case '2': case '3': case '4':
                 case '5': case '6': case '7': case '8': case '9':
                     {

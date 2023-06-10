@@ -21,6 +21,11 @@ namespace Orbit.CodeAnalysis.Syntax
         NotEqualsToken,
         DoubleEqualsToken,
         EqualsToken,
+        LessOrEqualsToken,
+        LessToken,
+        GreaterOrEqualsToken,
+        GreaterToken,
+
         IdentifierToken,
         
         // Keywords

@@ -21,6 +21,15 @@ namespace Orbit.Tests.CodeAnalysis
         
         [InlineData("{ var a = 0 (a = 10) * a}", 100)]
 
+        [InlineData("3 < 4", true)]
+        [InlineData("5 < 4", false)]
+        [InlineData("4 <= 4", true)]
+        [InlineData("8 <= 4", false)]
+        [InlineData("8 > 4", true)]
+        [InlineData("3 > 4", false)]
+        [InlineData("4 >= 4", true)]
+        [InlineData("2 >= 4", false)]
+
         [InlineData("true", true)]
         [InlineData("false", false)]
         [InlineData("!false", !false)]

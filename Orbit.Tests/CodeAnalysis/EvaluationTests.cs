@@ -41,6 +41,11 @@ namespace Orbit.Tests.CodeAnalysis
         [InlineData("true and false", false)]
         [InlineData("true or false", true)]
         [InlineData("not true", false)]
+
+        [InlineData("{ var a = 10 if a == 10 a = 5 a }", 5)]
+        [InlineData("{ var a = 7 if a == 10 a = 5 a }", 7)]
+        [InlineData("{ var a = 10 if a == 10 a = 5 else a = 1 a}", 5)]
+        [InlineData("{ var a = 4 if a == 10 a = 5 else a = 1 a}", 1)]
         public void Evaulator_Computes_CorrectValues(string text, object actualValue)
         {
             AssertValue(text, actualValue);
@@ -64,7 +69,7 @@ namespace Orbit.Tests.CodeAnalysis
                 Variable 'x' already declared.
             ";
 
-            AssertHasDiagnostics(text, diagnostic);
+            AssertDiagnostics(text, diagnostic);
         }
 
         [Fact]
@@ -76,7 +81,7 @@ namespace Orbit.Tests.CodeAnalysis
                 Variable name 'x' doesn't exist.
             ";
 
-            AssertHasDiagnostics(text, diagnostic);
+            AssertDiagnostics(text, diagnostic);
         }
 
         [Fact]
@@ -92,7 +97,7 @@ namespace Orbit.Tests.CodeAnalysis
                 Cannot assign value to read-only variable 'x'.
             ";
 
-            AssertHasDiagnostics(text, diagnostic);
+            AssertDiagnostics(text, diagnostic);
         }
 
         [Fact]
@@ -108,7 +113,7 @@ namespace Orbit.Tests.CodeAnalysis
                 Cannot convert from type 'System.Boolean' to type 'System.Int32'.
             ";
 
-            AssertHasDiagnostics(text, diagnostic);
+            AssertDiagnostics(text, diagnostic);
         }
 
         [Fact]
@@ -123,7 +128,7 @@ namespace Orbit.Tests.CodeAnalysis
                 Unary operator '+' is not defined for type 'System.Boolean'.
             ";
 
-            AssertHasDiagnostics(text, diagnostic);
+            AssertDiagnostics(text, diagnostic);
         }
 
         [Fact]
@@ -138,7 +143,7 @@ namespace Orbit.Tests.CodeAnalysis
                 Binary operator '+' is not defined for types 'System.Int32' and 'System.Boolean'.
             ";
 
-            AssertHasDiagnostics(text, diagnostic);
+            AssertDiagnostics(text, diagnostic);
         }
 
         private static void AssertValue(string text, object actualValue)
@@ -152,7 +157,7 @@ namespace Orbit.Tests.CodeAnalysis
             Assert.Equal(actualValue, evaluator.Value);
         }
 
-        private void AssertHasDiagnostics(string text, string diagnosticText)
+        private void AssertDiagnostics(string text, string diagnosticText)
         {
             var annotatedText = AnnotatedText.Parse(text);
             var syntaxTree = SyntaxTree.Parse(annotatedText.Text);

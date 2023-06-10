@@ -37,9 +37,21 @@ namespace Orbit.CodeAnalysis
                 case BoundNodeKind.VariableDeclaration:
                     EvaluateVariableDeclaration((BoundVariableDeclaration)node);
                     break;
+                case BoundNodeKind.IfStatement:
+                    EvaluateIfStatement((BoundIfStatement)node);
+                    break;
                 default:
                     throw new Exception($"Unexpected node {node.Kind}\n");
             }
+        }
+
+        private void EvaluateIfStatement(BoundIfStatement node)
+        {
+            var condition = (bool)EvaluateExpression(node.Condition);
+            if (condition)
+                EvaluateStatement(node.ThenStatements);
+            else if (node.ElseStatements != null)
+                EvaluateStatement(node.ElseStatements);
         }
 
         private void EvaluateBlockStatement(BoundBlockStatement node)

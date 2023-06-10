@@ -67,6 +67,10 @@ namespace Orbit.CodeAnalysis.Syntax
                     return SyntaxKind.VarKeyword;
                 case "let":
                     return SyntaxKind.LetKeyword;
+                case "if":
+                    return SyntaxKind.IfKeyword;
+                case "else":
+                    return SyntaxKind.ElseKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -146,6 +150,10 @@ namespace Orbit.CodeAnalysis.Syntax
                     return "var";
                 case SyntaxKind.LetKeyword:
                     return "let";
+                case SyntaxKind.IfKeyword:
+                    return "if";
+                case SyntaxKind.ElseKeyword:
+                    return "else";
                 default:
                     return null;
             }

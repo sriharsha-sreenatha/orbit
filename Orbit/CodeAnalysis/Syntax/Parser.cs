@@ -78,9 +78,31 @@ namespace Orbit.CodeAnalysis.Syntax
                 case SyntaxKind.VarKeyword:
                 case SyntaxKind.LetKeyword:
                     return ParseVariableDeclaration();
+                case SyntaxKind.IfKeyword:
+                    return ParseIfStatement();
                 default:
                     return ParseExpressionStatement();
             }
+        }
+
+        private StatementSyntax ParseIfStatement()
+        {
+            var ifToken = MatchToken(SyntaxKind.IfKeyword);
+            var condition = ParseExpression();
+            var thenStatements = ParseStatement();
+            var elseClause = ParseElseClause();
+
+            return new IfStatementSyntax(ifToken, condition, thenStatements, elseClause);
+        }
+
+        private ElseClauseSyntax ParseElseClause()
+        {
+            if (Current.Kind != SyntaxKind.ElseKeyword)
+                return null;
+            
+            var elseToken = MatchToken(SyntaxKind.ElseKeyword);
+            var elseStatements = ParseStatement();
+            return new ElseClauseSyntax(elseToken, elseStatements);
         }
 
         private BlockStatementSyntax ParseBlockStatement()

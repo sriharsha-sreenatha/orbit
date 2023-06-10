@@ -167,7 +167,7 @@ namespace Orbit.CodeAnalysis.Binding
 
             if (boundExpression.Type != variable.Type)
             {
-                _diagnostics.ReportCannotConvert(syntax.Expression.Span,  variable.Type, boundExpression.Type);
+                _diagnostics.ReportCannotConvert(syntax.Expression.Span, boundExpression.Type, variable.Type);
                 return boundExpression;
             }
 

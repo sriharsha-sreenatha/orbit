@@ -34,13 +34,7 @@ namespace Orbit.Tests.CodeAnalysis
         [InlineData("not true", false)]
         public void Evaulator_Computes_CorrectValues(string text, object actualValue)
         {
-            var expression = SyntaxTree.Parse(text);
-            var compilation = new Compilation(expression);
-            var variables = new Dictionary<VariableSymbol, object>();
-            var evaluator = compilation.Evaluate(variables);
-
-            Assert.Empty(evaluator.Diagnostics);
-            Assert.Equal(actualValue, evaluator.Value);
+            AssertValue(text, actualValue);
         }
 
         [Fact]
@@ -62,6 +56,91 @@ namespace Orbit.Tests.CodeAnalysis
             ";
 
             AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluator_Name_Reports_Undefined()
+        {
+            var text = @"[x] = 10";
+
+            var diagnostic = @"
+                Variable name 'x' doesn't exist.
+            ";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluator_Assignment_Reports_CannotAssign()
+        {
+            var text = @"
+            {
+                let x = 10
+                x [=] 15
+            }";
+
+            var diagnostic = @"
+                Cannot assign value to read-only variable 'x'.
+            ";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluator_Assignment_Reports_CannotConvert()
+        {
+            var text = @"
+            {
+                var x = 10
+                x = [false]
+            }";
+
+            var diagnostic = @"
+                Cannot convert System.Boolean to System.Int32.
+            ";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluator_Unary_Reports_Undefined()
+        {
+            var text = @"
+            {
+                [+]true
+            }";
+
+            var diagnostic = @"
+                Unary operator '+' is not defined for type System.Boolean.
+            ";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluator_Binary_Reports_Undefined()
+        {
+            var text = @"
+            {
+                10 [+] false
+            }";
+
+            var diagnostic = @"
+                Binary operator '+' is not defined for types System.Int32 and System.Boolean.
+            ";
+
+            AssertHasDiagnostics(text, diagnostic);
+        }
+
+        private static void AssertValue(string text, object actualValue)
+        {
+            var expression = SyntaxTree.Parse(text);
+            var compilation = new Compilation(expression);
+            var variables = new Dictionary<VariableSymbol, object>();
+            var evaluator = compilation.Evaluate(variables);
+
+            Assert.Empty(evaluator.Diagnostics);
+            Assert.Equal(actualValue, evaluator.Value);
         }
 
         private void AssertHasDiagnostics(string text, string diagnosticText)

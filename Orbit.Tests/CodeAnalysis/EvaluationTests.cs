@@ -96,7 +96,7 @@ namespace Orbit.Tests.CodeAnalysis
             }";
 
             var diagnostic = @"
-                Cannot convert System.Boolean to System.Int32.
+                Cannot convert from type 'System.Boolean' to type 'System.Int32'.
             ";
 
             AssertHasDiagnostics(text, diagnostic);
@@ -111,7 +111,7 @@ namespace Orbit.Tests.CodeAnalysis
             }";
 
             var diagnostic = @"
-                Unary operator '+' is not defined for type System.Boolean.
+                Unary operator '+' is not defined for type 'System.Boolean'.
             ";
 
             AssertHasDiagnostics(text, diagnostic);
@@ -126,7 +126,7 @@ namespace Orbit.Tests.CodeAnalysis
             }";
 
             var diagnostic = @"
-                Binary operator '+' is not defined for types System.Int32 and System.Boolean.
+                Binary operator '+' is not defined for types 'System.Int32' and 'System.Boolean'.
             ";
 
             AssertHasDiagnostics(text, diagnostic);

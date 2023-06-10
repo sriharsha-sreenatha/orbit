@@ -33,7 +33,7 @@ namespace Orbit.CodeAnalysis
 
         public void ReportInvalidNumber(TextSpan span, string text, Type type)
         {
-            var message = $"The number {text} isn't a valid {type}.";
+            var message = $"The number '{text}' isn't a valid '{type}'.";
             Report(span, message);
         }
 
@@ -45,13 +45,13 @@ namespace Orbit.CodeAnalysis
 
         public void ReportUndefinedUnaryOperator(TextSpan span, string operatorText, Type operandType)
         {
-            var message = $"Unary operator '{operatorText}' is not defined for type {operandType}.";
+            var message = $"Unary operator '{operatorText}' is not defined for type '{operandType}'.";
             Report(span, message);
         }
 
         public void ReportUndefinedBinaryOperator(TextSpan span, string operatorText, Type leftType, Type rightType)
         {
-            var message = $"Binary operator '{operatorText}' is not defined for types {leftType} and {rightType}.";
+            var message = $"Binary operator '{operatorText}' is not defined for types '{leftType}' and '{rightType}'.";
             Report(span, message);
         }
 
@@ -63,7 +63,7 @@ namespace Orbit.CodeAnalysis
 
         public void ReportCannotConvert(TextSpan span, Type fromType, Type toType)
         {
-            var message = $"Cannot convert {fromType} to {toType}.";
+            var message = $"Cannot convert from type '{fromType}' to type '{toType}'.";
             Report(span, message);
         }
 

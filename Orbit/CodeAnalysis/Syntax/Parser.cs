@@ -157,12 +157,19 @@ namespace Orbit.CodeAnalysis.Syntax
         private ExpressionSyntax ParseAssignmentExpression()
         {
             if(Peek(0).Kind == SyntaxKind.IdentifierToken
-            && Peek(1).Kind == SyntaxKind.EqualsToken)
+            && (Peek(1).Kind == SyntaxKind.EqualsToken)
+            || (Peek(1).Kind == SyntaxKind.PlusEqualsToken)
+            || (Peek(1).Kind == SyntaxKind.MinusEqualsToken)
+            || (Peek(1).Kind == SyntaxKind.StarEqualsToken)
+            || (Peek(1).Kind == SyntaxKind.SlashEqualsToken))
             {
                 var identifierToken = NextToken();
                 var operatorToken = NextToken();
                 var right = ParseAssignmentExpression();
-                return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
+
+                return operatorToken.Kind == SyntaxKind.EqualsToken
+                        ? new AssignmentExpressionSyntax(identifierToken, operatorToken, right)
+                        : new OperatorAssignmentExpressionSyntax(identifierToken, operatorToken, right);
             }
 
             return ParseBinaryExpression();

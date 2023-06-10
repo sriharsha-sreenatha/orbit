@@ -48,6 +48,11 @@ namespace Orbit.Tests.CodeAnalysis
         [InlineData("{ var a = 4 if a == 10 a = 5 else a = 1 a}", 1)]
 
         [InlineData("{ var n = 10 var i = 1 while i < n { i = i + 1 } i}", 10)]
+
+        [InlineData("{var i = 10 i += 1 i}", 11)]
+        [InlineData("{var i = 5 i -= 1 i}", 4)]
+        [InlineData("{var i = 4 i *= 10 i}", 40)]
+        [InlineData("{var i = 100 i /= 4 i}", 25)]
         public void Evaulator_Computes_CorrectValues(string text, object actualValue)
         {
             AssertValue(text, actualValue);

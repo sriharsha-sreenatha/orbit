@@ -56,20 +56,52 @@ namespace Orbit.CodeAnalysis.Syntax
                     _kind = SyntaxKind.EndOfFileToken;
                     break;
                 case '+':
-                    _kind = SyntaxKind.PlusToken;
                     _position++;
+                    if(Current == '=')
+                    {
+                        _kind = SyntaxKind.PlusEqualsToken;
+                        _position++;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.PlusToken;
+                    }
                     break;
                 case '-':
-                    _kind = SyntaxKind.MinusToken;
                     _position++;
+                    if(Current == '=')
+                    {
+                        _kind = SyntaxKind.MinusEqualsToken;
+                        _position++;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.MinusToken;
+                    }
                     break;
                 case '*':
-                    _kind = SyntaxKind.StarToken;
                     _position++;
+                    if(Current == '=')
+                    {
+                        _kind = SyntaxKind.StarEqualsToken;
+                        _position++;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.StarToken;
+                    }
                     break;
                 case '/':
-                    _kind = SyntaxKind.SlashToken;
                     _position++;
+                    if(Current == '=')
+                    {
+                        _kind = SyntaxKind.SlashEqualsToken;
+                        _position++;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.SlashToken;
+                    }
                     break;
                 case '(':
                     _kind = SyntaxKind.OpenParenToken;

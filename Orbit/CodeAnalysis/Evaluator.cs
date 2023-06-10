@@ -93,6 +93,8 @@ namespace Orbit.CodeAnalysis
                     return EvaluateBoundVariableExpression((BoundVariableExpression)node);
                 case BoundNodeKind.AssignmentExpression:
                     return EvaluateBoundAssignmentExpression((BoundAssignmentExpression)node);
+                case BoundNodeKind.OperatorAssignmentExpression:
+                    return EvaluateBoundOperatorAssignmentExpression((BoundOperatorAssignmentExpression)node);
                 case BoundNodeKind.UnaryExpression:
                     return EvaluateBoundUnaryExpression((BoundUnaryExpression)node);
                 case BoundNodeKind.BinaryExpression:
@@ -117,6 +119,31 @@ namespace Orbit.CodeAnalysis
             var value = EvaluateExpression(a.Expression);
             _variables[a.Variable] = value;
             return value;
+        }
+
+        private object EvaluateBoundOperatorAssignmentExpression(BoundOperatorAssignmentExpression a)
+        {
+            var prevValue = _variables[a.Variable];
+            var rightValue = EvaluateExpression(a.Expression);
+            switch (a.Operator.Kind)
+            {
+                case BoundBinaryOperatorKind.AdditionAssignment:
+                    _variables[a.Variable] = (int)prevValue + (int)rightValue;
+                    return _variables[a.Variable];
+                case BoundBinaryOperatorKind.SubtractionAssignment:
+                    _variables[a.Variable] = (int)prevValue - (int)rightValue;
+                    return _variables[a.Variable];
+                case BoundBinaryOperatorKind.MultiplicationAssignment:
+                    _variables[a.Variable] = (int)prevValue * (int)rightValue;
+                    return _variables[a.Variable];
+                case BoundBinaryOperatorKind.DivisionAssignment:
+                    if ((int)rightValue == 0)
+                        throw new Exception($"Division by zero error\n");
+                    _variables[a.Variable] = (int)prevValue / (int)rightValue;
+                    return _variables[a.Variable];
+                default:
+                    throw new Exception($"Unexpected binary assignment operator {a.Operator.Kind}\n");
+            }
         }
 
         private object EvaluateBoundUnaryExpression(BoundUnaryExpression u)

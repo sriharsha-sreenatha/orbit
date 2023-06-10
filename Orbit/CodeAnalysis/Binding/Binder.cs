@@ -148,6 +148,8 @@ namespace Orbit.CodeAnalysis.Binding
                     return BindNameExpression((NameExpressionSyntax)syntax);
                 case SyntaxKind.AssignmentExpression:
                     return BindAssignmentExpression((AssignmentExpressionSyntax)syntax);
+                case SyntaxKind.OperatorAssignmentExpression:
+                    return BindOperatorAssignmentExpression((OperatorAssignmentExpressionSyntax)syntax);
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
@@ -200,6 +202,33 @@ namespace Orbit.CodeAnalysis.Binding
             }
 
             return new BoundAssignmentExpression(variable, boundExpression);
+        }
+
+        private BoundExpression BindOperatorAssignmentExpression(OperatorAssignmentExpressionSyntax syntax)
+        {
+            var name = syntax.IdentifierToken.Text;
+            var boundExpression = BindExpression(syntax.Expression);
+            
+            if (!_scope.TryLookup(name, out var variable))
+            {
+                _diagnostics.ReportUndefinedName(syntax.IdentifierToken.Span, name);
+                return boundExpression;
+            }
+            var boundOp = BoundBinaryOperator.Bind(syntax.OpEqualsToken.Kind, variable.Type, boundExpression.Type);
+
+            if (variable.IsReadOnly)
+            {
+                _diagnostics.ReportCannotAssign(syntax.OpEqualsToken.Span, name);
+                return boundExpression;
+            }
+
+            if (boundExpression.Type != variable.Type)
+            {
+                _diagnostics.ReportCannotConvert(syntax.Expression.Span, boundExpression.Type, variable.Type);
+                return boundExpression;
+            }
+
+            return new BoundOperatorAssignmentExpression(variable, boundOp, boundExpression);
         }
 
         private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax)

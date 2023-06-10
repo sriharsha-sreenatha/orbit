@@ -39,6 +39,11 @@ namespace Orbit.CodeAnalysis.Binding
             new BoundBinaryOperator(SyntaxKind.StarToken, BoundBinaryOperatorKind.Multiplication, typeof(int)),
             new BoundBinaryOperator(SyntaxKind.SlashToken, BoundBinaryOperatorKind.Division, typeof(int)),
             
+            new BoundBinaryOperator(SyntaxKind.PlusEqualsToken, BoundBinaryOperatorKind.AdditionAssignment, typeof(int)),
+            new BoundBinaryOperator(SyntaxKind.MinusEqualsToken, BoundBinaryOperatorKind.SubtractionAssignment, typeof(int)),
+            new BoundBinaryOperator(SyntaxKind.StarEqualsToken, BoundBinaryOperatorKind.MultiplicationAssignment, typeof(int)),
+            new BoundBinaryOperator(SyntaxKind.SlashEqualsToken, BoundBinaryOperatorKind.DivisionAssignment, typeof(int)),
+            
             new BoundBinaryOperator(SyntaxKind.LessToken, BoundBinaryOperatorKind.LessThan, typeof(int), typeof(bool)),
             new BoundBinaryOperator(SyntaxKind.LessOrEqualsToken, BoundBinaryOperatorKind.LessOrEqualsTo, typeof(int), typeof(bool)),
             new BoundBinaryOperator(SyntaxKind.GreaterToken, BoundBinaryOperatorKind.GreaterThan, typeof(int), typeof(bool)),

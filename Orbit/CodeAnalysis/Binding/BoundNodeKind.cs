@@ -15,5 +15,6 @@ namespace Orbit.CodeAnalysis.Binding
         BinaryExpression,
         VariableExpression,
         AssignmentExpression,
+        OperatorAssignmentExpression,
     }
 }

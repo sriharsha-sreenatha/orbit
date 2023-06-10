@@ -44,6 +44,10 @@ namespace Orbit.CodeAnalysis.Syntax
                 case SyntaxKind.OrKeyword:
                     return 1;
                 
+                case SyntaxKind.PlusEqualsToken:
+                case SyntaxKind.MinusEqualsToken:
+                case SyntaxKind.StarEqualsToken:
+                case SyntaxKind.SlashEqualsToken:
                 default:
                     return 0;
             }
@@ -110,6 +114,14 @@ namespace Orbit.CodeAnalysis.Syntax
                     return "/";
                 case SyntaxKind.StarToken: 
                     return "*";
+                case SyntaxKind.PlusEqualsToken: 
+                    return "+=";
+                case SyntaxKind.MinusEqualsToken: 
+                    return "-=";
+                case SyntaxKind.SlashEqualsToken: 
+                    return "/=";
+                case SyntaxKind.StarEqualsToken: 
+                    return "*=";
                 case SyntaxKind.NotToken: 
                     return "!";
                 case SyntaxKind.DoubleAmpersandToken: 

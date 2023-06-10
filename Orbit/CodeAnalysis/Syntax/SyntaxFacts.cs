@@ -77,6 +77,10 @@ namespace Orbit.CodeAnalysis.Syntax
                     return SyntaxKind.ElseKeyword;
                 case "while":
                     return SyntaxKind.WhileKeyword;
+                case "for":
+                    return SyntaxKind.ForKeyword;
+                case "to":
+                    return SyntaxKind.ToKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -170,6 +174,10 @@ namespace Orbit.CodeAnalysis.Syntax
                     return "else";
                 case SyntaxKind.WhileKeyword:
                     return "while";
+                case SyntaxKind.ForKeyword:
+                    return "for";
+                case SyntaxKind.ToKeyword:
+                    return "to";
                 default:
                     return null;
             }

@@ -82,9 +82,24 @@ namespace Orbit.CodeAnalysis.Syntax
                     return ParseIfStatement();
                 case SyntaxKind.WhileKeyword:
                     return ParseWhileStatement();
+                case SyntaxKind.ForKeyword:
+                    return ParseForStatement();
                 default:
                     return ParseExpressionStatement();
             }
+        }
+
+        private StatementSyntax ParseForStatement()
+        {
+            var forToken = MatchToken(SyntaxKind.ForKeyword);
+            var identifier = MatchToken(SyntaxKind.IdentifierToken);
+            var equalsToken = MatchToken(SyntaxKind.EqualsToken);
+            var lower = ParseExpression();
+            var toToken = MatchToken(SyntaxKind.ToKeyword);
+            var upper = ParseExpression();
+            var body = ParseStatement();
+
+            return new ForStatementSyntax(forToken, identifier, equalsToken, lower, toToken, upper, body);
         }
 
         private StatementSyntax ParseWhileStatement()

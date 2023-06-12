@@ -82,7 +82,7 @@ namespace Orbit.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Name_Reports_Undefined()
+        public void Evaluator_NameExpression_Reports_Undefined()
         {
             var text = @"[x] = 10";
 
@@ -94,7 +94,7 @@ namespace Orbit.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Assignment_Reports_CannotAssign()
+        public void Evaluator_AssignmentExpression_Reports_CannotAssign()
         {
             var text = @"
             {
@@ -110,7 +110,7 @@ namespace Orbit.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Assignment_Reports_CannotConvert()
+        public void Evaluator_AssignmentExpression_Reports_CannotConvert()
         {
             var text = @"
             {
@@ -194,7 +194,7 @@ namespace Orbit.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Unary_Reports_Undefined()
+        public void Evaluator_UnaryExpression_Reports_Undefined()
         {
             var text = @"
             {
@@ -209,7 +209,7 @@ namespace Orbit.Tests.CodeAnalysis
         }
 
         [Fact]
-        public void Evaluator_Binary_Reports_Undefined()
+        public void Evaluator_BinaryExpression_Reports_Undefined()
         {
             var text = @"
             {

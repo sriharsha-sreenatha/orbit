@@ -86,12 +86,12 @@ namespace Orbit.Tests.CodeAnalysis
         {
             var text = @"
             {
-                [)]
-            }
+                [)][]
             ";
 
             var diagnostic = @"
                 Unexpected token <CloseParenToken>, expected <IdentifierToken>.
+                Unexpected token <EndOfFileToken>, expected <CloseBraceToken>.
             ";
 
             AssertDiagnostics(text, diagnostic);

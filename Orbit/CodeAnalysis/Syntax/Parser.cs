@@ -140,8 +140,15 @@ namespace Orbit.CodeAnalysis.Syntax
             while (Current.Kind != SyntaxKind.EndOfFileToken
                 && Current.Kind != SyntaxKind.CloseBraceToken)
             {
+                var prevToken = Current;
                 var statement = ParseStatement();
                 statements.Add(statement);
+                
+                // ParseStatement() did not consume any token.
+                // Hence skip a token. Other errors would be reported.
+                // This is in place to avoid infinite loop.
+                if (Current== prevToken)
+                    NextToken();
             }
             var closeBrace = MatchToken(SyntaxKind.CloseBraceToken);
 

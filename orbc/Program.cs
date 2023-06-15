@@ -34,7 +34,7 @@ namespace Orbit
                     if(input == "exit")
                         return;
                     else if (isBlank)
-                        break;
+                        continue;
                     else if (input == "#showTree")
                     {
                         showTree = !showTree;

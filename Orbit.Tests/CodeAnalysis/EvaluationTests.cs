@@ -82,12 +82,40 @@ namespace Orbit.Tests.CodeAnalysis
         }
 
         [Fact]
+        public void Evaluator_BlockStatement_NoInfiniteLoop()
+        {
+            var text = @"
+            {
+                [)]
+            }
+            ";
+
+            var diagnostic = @"
+                Unexpected token <CloseParenToken>, expected <IdentifierToken>.
+            ";
+
+            AssertDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
         public void Evaluator_NameExpression_Reports_Undefined()
         {
             var text = @"[x] = 10";
 
             var diagnostic = @"
                 Variable name 'x' doesn't exist.
+            ";
+
+            AssertDiagnostics(text, diagnostic);
+        }
+
+        [Fact]
+        public void Evaluator_NameExpression_Reports_NoErrorForInsertedToken()
+        {
+            var text = @"[]";
+
+            var diagnostic = @"
+                Unexpected token <EndOfFileToken>, expected <IdentifierToken>.
             ";
 
             AssertDiagnostics(text, diagnostic);

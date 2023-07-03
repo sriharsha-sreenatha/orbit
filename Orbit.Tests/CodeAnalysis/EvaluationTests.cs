@@ -38,6 +38,14 @@ namespace Orbit.Tests.CodeAnalysis
         [InlineData("false == false", true)]
         [InlineData("true == false", false)]
         [InlineData("true == !false", true)]
+        
+        [InlineData("true && true", true)]
+        [InlineData("true && false", false)]
+        [InlineData("false && false", false)]
+        [InlineData("true || true", true)]
+        [InlineData("true || false", true)]
+        [InlineData("false || false", false)]
+
         [InlineData("true and false", false)]
         [InlineData("true or false", true)]
         [InlineData("not true", false)]

@@ -23,5 +23,8 @@ namespace Orbit.CodeAnalysis.Binding
         LogicalOr,
         IsEquals,
         IsNotEquals,
+        BitwiseAnd,
+        BitwiseOr,
+        BitwiseXor,
     }
 }

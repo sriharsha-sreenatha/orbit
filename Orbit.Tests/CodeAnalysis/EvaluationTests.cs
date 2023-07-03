@@ -41,14 +41,54 @@ namespace Orbit.Tests.CodeAnalysis
         
         [InlineData("true && true", true)]
         [InlineData("true && false", false)]
+        [InlineData("false && true", false)]
         [InlineData("false && false", false)]
+
         [InlineData("true || true", true)]
         [InlineData("true || false", true)]
+        [InlineData("false || true", true)]
         [InlineData("false || false", false)]
 
+        [InlineData("true and true", true)]
         [InlineData("true and false", false)]
+        [InlineData("false and true", false)]
+        [InlineData("false and false", false)]
+        
+        [InlineData("true or true", true)]
         [InlineData("true or false", true)]
+        [InlineData("false or true", true)]
+        [InlineData("false or false", false)]
+
         [InlineData("not true", false)]
+        [InlineData("not false", true)]
+        
+        [InlineData("1 | 2", 3)]
+        [InlineData("1 | 0", 1)]
+        [InlineData("1 & 0", 0)]
+        [InlineData("2 & 3", 2)]
+        [InlineData("2 ^ 3", 1)]
+        [InlineData("1 ^ 2", 3)]
+        [InlineData("~1", -2)]
+
+        [InlineData("true | true", true)]
+        [InlineData("true | false", true)]
+        [InlineData("false | true", true)]
+        [InlineData("false | false", false)]
+
+        [InlineData("false & false", false)]
+        [InlineData("false & true", false)]
+        [InlineData("true & false", false)]
+        [InlineData("true & true", true)]
+
+        [InlineData("false ^ false", false)]
+        [InlineData("false ^ true", true)]
+        [InlineData("true ^ false", true)]
+        [InlineData("true ^ true", false)]
+        
+        [InlineData("false xor false", false)]
+        [InlineData("false xor true", true)]
+        [InlineData("true xor false", true)]
+        [InlineData("true xor true", false)]
 
         [InlineData("{ var a = 10 if a == 10 a = 5 a }", 5)]
         [InlineData("{ var a = 7 if a == 10 a = 5 a }", 7)]

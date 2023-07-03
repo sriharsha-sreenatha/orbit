@@ -10,6 +10,7 @@ namespace Orbit.CodeAnalysis.Syntax
                 case SyntaxKind.MinusToken:
                 case SyntaxKind.NotToken:
                 case SyntaxKind.NotKeyword:
+                case SyntaxKind.TildaToken:
                     return 6;
                 default:
                     return 0;
@@ -37,11 +38,15 @@ namespace Orbit.CodeAnalysis.Syntax
                     return 3;
                 
                 case SyntaxKind.DoubleAmpersandToken:
+                case SyntaxKind.AmpersandToken:
                 case SyntaxKind.AndKeyword:
                     return 2;
                 
                 case SyntaxKind.DoublePipeToken:
+                case SyntaxKind.PipeToken:
                 case SyntaxKind.OrKeyword:
+                case SyntaxKind.HatToken:
+                case SyntaxKind.XorKeyword:
                     return 1;
                 
                 case SyntaxKind.PlusEqualsToken:
@@ -65,6 +70,8 @@ namespace Orbit.CodeAnalysis.Syntax
                     return SyntaxKind.AndKeyword;
                 case "or":
                     return SyntaxKind.OrKeyword;
+                case "xor":
+                    return SyntaxKind.XorKeyword;
                 case "not":
                     return SyntaxKind.NotKeyword;
                 case "var":
@@ -128,8 +135,16 @@ namespace Orbit.CodeAnalysis.Syntax
                     return "*=";
                 case SyntaxKind.NotToken: 
                     return "!";
+                case SyntaxKind.HatToken:
+                    return "^";
+                case SyntaxKind.TildaToken:
+                    return "~";
+                case SyntaxKind.AmpersandToken:
+                    return "&";
                 case SyntaxKind.DoubleAmpersandToken: 
                     return "&&";
+                case SyntaxKind.PipeToken:
+                    return "|";
                 case SyntaxKind.DoublePipeToken: 
                     return "||";
                 case SyntaxKind.OpenParenToken: 
@@ -162,6 +177,8 @@ namespace Orbit.CodeAnalysis.Syntax
                     return "and";
                 case SyntaxKind.OrKeyword:
                     return "or";
+                case SyntaxKind.XorKeyword:
+                    return "xor";
                 case SyntaxKind.NotKeyword:
                     return "not";
                 case SyntaxKind.VarKeyword:

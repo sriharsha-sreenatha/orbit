@@ -30,6 +30,7 @@ namespace Orbit.CodeAnalysis.Binding
             new BoundUnaryOperator(SyntaxKind.NotKeyword, BoundUnaryOperatorKind.LogicalNegation, typeof(bool)),
             new BoundUnaryOperator(SyntaxKind.PlusToken, BoundUnaryOperatorKind.Identity, typeof(int)),
             new BoundUnaryOperator(SyntaxKind.MinusToken, BoundUnaryOperatorKind.Negation, typeof(int)),
+            new BoundUnaryOperator(SyntaxKind.TildaToken, BoundUnaryOperatorKind.OnesComplement, typeof(int)),
         };
 
         public static BoundUnaryOperator Bind(SyntaxKind syntaxKind, Type opType)

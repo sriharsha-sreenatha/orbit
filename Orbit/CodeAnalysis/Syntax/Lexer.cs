@@ -119,6 +119,14 @@ namespace Orbit.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseBraceToken;
                     _position++;
                     break;
+                case '^':
+                    _kind = SyntaxKind.HatToken;
+                    _position++;
+                    break;
+                case '~':
+                    _kind = SyntaxKind.TildaToken;
+                    _position++;
+                    break;
                 case '!':
                     _position++;
                     if(Current == '=')
@@ -137,12 +145,22 @@ namespace Orbit.CodeAnalysis.Syntax
                         _kind = SyntaxKind.DoubleAmpersandToken;
                         _position+=2;
                     }
+                    else
+                    {
+                        _kind = SyntaxKind.AmpersandToken;
+                        _position++;
+                    }
                     break;
                 case '|':
                     if(LookAhead == '|')
                     {
                         _kind = SyntaxKind.DoublePipeToken;
                         _position+=2;
+                    }
+                    else
+                    {
+                        _kind = SyntaxKind.PipeToken;
+                        _position++;
                     }
                     break;
                 case '=':

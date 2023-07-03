@@ -13,6 +13,7 @@ namespace Orbit
         private static void Main(string[] args)
         {
             var showTree = false;
+            var showProgram = false;
             var variables = new Dictionary<VariableSymbol, object>();
             var textBuilder = new StringBuilder();
             Compilation previous = null;
@@ -41,6 +42,12 @@ namespace Orbit
                         Console.WriteLine(showTree ? "Showing parse trees." : "Not showing parse trees.");
                         continue;
                     }
+                    else if (input == "#showProgram")
+                    {
+                        showProgram = !showProgram;
+                        Console.WriteLine(showProgram ? "Showing bound trees." : "Not showing bound trees.");
+                        continue;
+                    }
                     else if (input == "#cls")
                     {
                         Console.Clear();
@@ -67,17 +74,12 @@ namespace Orbit
                 
                 var result = compilation.Evaluate(variables);
 
-                var diagnostics = result.Diagnostics;
-
-                if(showTree)
-                {
-                    var color = Console.ForegroundColor;
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                if (showTree)
                     syntaxTree.Root.WriteTo(Console.Out);
-                    Console.ResetColor();
-                }
+                if(showProgram)
+                    compilation.EmitTree(Console.Out);
                 
-                if (!diagnostics.Any())
+                if (!result.Diagnostics.Any())
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(result.Value);
@@ -87,7 +89,7 @@ namespace Orbit
                 }
                 else
                 {
-                    foreach (var diag in diagnostics)
+                    foreach (var diag in result.Diagnostics)
                     {
                         var lineIndex = syntaxTree.Text.GetLineIndex(diag.Span.Start);
                         var line = syntaxTree.Text.Lines[lineIndex];

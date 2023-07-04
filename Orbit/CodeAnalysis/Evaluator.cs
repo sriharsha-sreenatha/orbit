@@ -43,14 +43,15 @@ namespace Orbit.CodeAnalysis
                 case BoundNodeKind.WhileStatement:
                     EvaluateWhileStatement((BoundWhileStatement)node);
                     break;
-                case BoundNodeKind.ForStatement:
-                    EvaluateForStatement((BoundForStatement)node);
-                    break;
+                // case BoundNodeKind.ForStatement:
+                //     EvaluateForStatement((BoundForStatement)node);
+                //     break;
                 default:
                     throw new Exception($"Unexpected node {node.Kind}\n");
             }
         }
 
+        /*
         private void EvaluateForStatement(BoundForStatement node)
         {
             var lower = (int)EvaluateExpression(node.Lower);
@@ -62,6 +63,7 @@ namespace Orbit.CodeAnalysis
                 EvaluateStatement(node.Body);
             }
         }
+        */
 
         private void EvaluateWhileStatement(BoundWhileStatement node)
         {

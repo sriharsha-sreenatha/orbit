@@ -145,6 +145,8 @@ namespace Orbit.CodeAnalysis.Binding
                 return b.Operator.Kind.ToString() + "Expression";
             if (node is BoundUnaryExpression u)
                 return u.Operator.Kind.ToString() + "Expression";
+            if (node is BoundOperatorAssignmentExpression o)
+                return o.Operator.Kind.ToString() + "Expression";
             
             return node.Kind.ToString();
         }

@@ -72,12 +72,12 @@ namespace Orbit
                                     ? new Compilation(syntaxTree)
                                     : previous.ContinueWith(syntaxTree);
                 
-                var result = compilation.Evaluate(variables);
-
                 if (showTree)
                     syntaxTree.Root.WriteTo(Console.Out);
                 if(showProgram)
                     compilation.EmitTree(Console.Out);
+                
+                var result = compilation.Evaluate(variables);
                 
                 if (!result.Diagnostics.Any())
                 {

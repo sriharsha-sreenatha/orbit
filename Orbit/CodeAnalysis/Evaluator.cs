@@ -50,8 +50,7 @@ namespace Orbit.CodeAnalysis
                     case BoundNodeKind.ConditionalGotoStatement:
                         var cgt = ((BoundConditionalGotoStatement)stmt);
                         var condition = (bool)EvaluateExpression(cgt.Condition);
-                        if ((condition && !cgt.JumpIfFalse)
-                        ||  (!condition && cgt.JumpIfFalse))
+                        if (condition == cgt.JumpIfTrue)
                             index = labelIndex[cgt.Label];
                         else
                             index++;

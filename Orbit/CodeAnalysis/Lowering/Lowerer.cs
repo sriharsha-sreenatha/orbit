@@ -62,7 +62,7 @@ namespace Orbit.CodeAnalysis.Lowering
                 // $end:
 
                 var endLabel = GenerateSymbol();
-                var gotoStatement = new BoundConditionalGotoStatement(endLabel, node.Condition, true);
+                var gotoStatement = new BoundConditionalGotoStatement(endLabel, node.Condition, false);
                 var endLabelStatement = new BoundLabelStatement(endLabel);
                 var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(gotoStatement, node.ThenStatements, endLabelStatement));
                 return RewriteStatement(result);
@@ -84,7 +84,7 @@ namespace Orbit.CodeAnalysis.Lowering
                 var endLabel = GenerateSymbol();
                 var elseLabel = GenerateSymbol();
 
-                var gotoElseStatement = new BoundConditionalGotoStatement(elseLabel, node.Condition, true);
+                var gotoElseStatement = new BoundConditionalGotoStatement(elseLabel, node.Condition, false);
                 // then part
                 var gotoEndStatement = new BoundGotoStatement(endLabel);
                 var elseLabelStatement = new BoundLabelStatement(elseLabel);
@@ -117,7 +117,7 @@ namespace Orbit.CodeAnalysis.Lowering
             var endLabel = GenerateSymbol();
 
             var checkLabelStatement = new BoundLabelStatement(checkLabel);
-            var gotoEndStatement = new BoundConditionalGotoStatement(endLabel, node.Condition, true);
+            var gotoEndStatement = new BoundConditionalGotoStatement(endLabel, node.Condition, false);
             var gotoCheckStatement = new BoundGotoStatement(checkLabel);
             var endLabelStatement = new BoundLabelStatement(endLabel);
 
@@ -155,10 +155,12 @@ namespace Orbit.CodeAnalysis.Lowering
             // }
 
             var loopvar = new BoundVariableDeclaration(node.LoopVar, node.Lower);
+            var uboundSymbol = new VariableSymbol("ubound", true, typeof(int));
+            var upperBoundDecl = new BoundVariableDeclaration(uboundSymbol, node.Upper);
             var condition = new BoundBinaryExpression(
                                 new BoundVariableExpression(loopvar.Variable),
                                 BoundBinaryOperator.Bind(Syntax.SyntaxKind.LessOrEqualsToken, typeof(int), typeof(int)),
-                                node.Upper
+                                new BoundVariableExpression(uboundSymbol)
                             );
             var increment = new BoundExpressionStatement(
                                 new BoundOperatorAssignmentExpression(
@@ -168,7 +170,7 @@ namespace Orbit.CodeAnalysis.Lowering
                                 )
                             );
             var whileStatement = new BoundWhileStatement(condition, new BoundBlockStatement(ImmutableArray.Create(node.Body, increment)));
-            var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(loopvar, whileStatement));
+            var result = new BoundBlockStatement(ImmutableArray.Create<BoundStatement>(loopvar, upperBoundDecl, whileStatement));
             return RewriteStatement(result);
         }
     }

@@ -1,9 +1,9 @@
-using System;
+using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.CodeAnalysis.Binding
 {
     internal abstract class BoundExpression : BoundNode
     {
-        public abstract Type Type { get; }
+        public abstract TypeSymbol Type { get; }
     }
 }

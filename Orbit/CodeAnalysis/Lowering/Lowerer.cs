@@ -156,17 +156,17 @@ namespace Orbit.CodeAnalysis.Lowering
             // }
 
             var loopvar = new BoundVariableDeclaration(node.LoopVar, node.Lower);
-            var uboundSymbol = new VariableSymbol("ubound", true, typeof(int));
+            var uboundSymbol = new VariableSymbol("ubound", true, TypeSymbol.Int);
             var upperBoundDecl = new BoundVariableDeclaration(uboundSymbol, node.Upper);
             var condition = new BoundBinaryExpression(
                                 new BoundVariableExpression(loopvar.Variable),
-                                BoundBinaryOperator.Bind(Syntax.SyntaxKind.LessOrEqualsToken, typeof(int), typeof(int)),
+                                BoundBinaryOperator.Bind(Syntax.SyntaxKind.LessOrEqualsToken, TypeSymbol.Int, TypeSymbol.Int),
                                 new BoundVariableExpression(uboundSymbol)
                             );
             var increment = new BoundExpressionStatement(
                                 new BoundOperatorAssignmentExpression(
                                     loopvar.Variable,
-                                    BoundBinaryOperator.Bind(Syntax.SyntaxKind.PlusEqualsToken, typeof(int), typeof(int)),
+                                    BoundBinaryOperator.Bind(Syntax.SyntaxKind.PlusEqualsToken, TypeSymbol.Int, TypeSymbol.Int),
                                     new BoundLiteralExpression(1)
                                 )
                             );

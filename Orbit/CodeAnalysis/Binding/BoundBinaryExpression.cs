@@ -1,4 +1,4 @@
-using System;
+using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.CodeAnalysis.Binding
 {
@@ -13,7 +13,7 @@ namespace Orbit.CodeAnalysis.Binding
         }
 
         public override BoundNodeKind Kind => BoundNodeKind.BinaryExpression;
-        public override Type Type => Operator.ResType;
+        public override TypeSymbol Type => Operator.ResType;
         public BoundExpression Left { get; }
         public BoundBinaryOperator Operator { get; }
         public BoundExpression Right { get; }

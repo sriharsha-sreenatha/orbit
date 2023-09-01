@@ -1,4 +1,5 @@
 using System.Text;
+using Orbit.CodeAnalysis.Symbols;
 using Orbit.CodeAnalysis.Text;
 
 namespace Orbit.CodeAnalysis.Syntax
@@ -307,7 +308,7 @@ namespace Orbit.CodeAnalysis.Syntax
             int value;
             if (!int.TryParse(text, out value))
             {
-                _diagnostics.ReportInvalidNumber(new TextSpan(_start, len), text, typeof(int));
+                _diagnostics.ReportInvalidNumber(new TextSpan(_start, len), text, TypeSymbol.Int);
             }
             _kind = SyntaxKind.NumberToken;
             _value = value;

@@ -23,7 +23,7 @@ namespace Orbit
                 var isIdentifier = token.Kind == SyntaxKind.IdentifierToken;
                 if (isKeyword)
                     Console.ForegroundColor = ConsoleColor.Blue;
-                if (isIdentifier)
+                else if (isIdentifier)
                     Console.ForegroundColor = ConsoleColor.White;
                 else if (isNumber)
                     Console.ForegroundColor = ConsoleColor.Cyan;

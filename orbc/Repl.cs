@@ -155,7 +155,7 @@ namespace Orbit
 
         private void HandleKey(ConsoleKeyInfo key, ObservableCollection<string> document, SubmissionView view)
         {
-            if (key.Modifiers == default(ConsoleModifiers))
+            if (key.Modifiers == default)
             {
                 switch (key.Key)
                 {
@@ -206,6 +206,15 @@ namespace Orbit
                 {
                     case ConsoleKey.Enter:
                         HandleControlEnter(document, view);
+                        break;
+                }
+            }
+            if (key.Modifiers == ConsoleModifiers.Shift)
+            {
+                switch (key.Key)
+                {
+                    case ConsoleKey.Enter:
+                        _submitted = true;
                         break;
                 }
             }

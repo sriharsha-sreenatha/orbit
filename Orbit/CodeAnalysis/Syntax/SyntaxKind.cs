@@ -7,6 +7,7 @@ namespace Orbit.CodeAnalysis.Syntax
         EndOfFileToken,
         WhitespaceToken,
         NumberToken,
+        StringToken,
         PlusToken,
         MinusToken,
         SlashToken,

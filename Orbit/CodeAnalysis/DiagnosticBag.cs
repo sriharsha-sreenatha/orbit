@@ -31,6 +31,12 @@ namespace Orbit.CodeAnalysis
             Report(span, message);
         }
 
+        public void ReportUnterminatedString(TextSpan span)
+        {
+            var message = "Unterminated string literal.";
+            Report(span, message);
+        }
+
         public void ReportInvalidNumber(TextSpan span, string text, Type type)
         {
             var message = $"The number '{text}' isn't a valid '{type}'.";

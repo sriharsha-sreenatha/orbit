@@ -1,3 +1,4 @@
+using System.Text;
 using Orbit.CodeAnalysis.Text;
 
 namespace Orbit.CodeAnalysis.Syntax
@@ -199,6 +200,9 @@ namespace Orbit.CodeAnalysis.Syntax
                         _kind = SyntaxKind.GreaterToken;
                     }
                     break;
+                case '"':
+                    ReadStringToken();
+                    break;
                 case '0': case '1': case '2': case '3': case '4':
                 case '5': case '6': case '7': case '8': case '9':
                     {
@@ -242,6 +246,47 @@ namespace Orbit.CodeAnalysis.Syntax
             var len = _position - _start;
             var text = _text.ToString(_start, len);
             _kind = SyntaxFacts.GetKeywordKind(text);
+        }
+
+        private void ReadStringToken()
+        {
+            // Ignore the first quote
+            _position++;
+            var sb = new StringBuilder();
+            var done = false;
+
+            while (!done)
+            {
+                switch (Current)
+                {
+                    case '\0':
+                    case '\r':
+                    case '\n':
+                        var span = new TextSpan(_start, 1);
+                        _diagnostics.ReportUnterminatedString(span);
+                        done = true;
+                        break;
+                    case '"':
+                        if (LookAhead == '"')
+                        {
+                            sb.Append(Current);
+                            _position += 2;
+                        }
+                        else
+                        {
+                            _position++;
+                            done = true;
+                        }
+                        break;
+                    default:
+                        sb.Append(Current);
+                        _position++;
+                        break;
+                }
+            }
+
+            _kind = SyntaxKind.StringToken;
+            _value = sb.ToString();
         }
 
         private void ReadWhitespaceToken()

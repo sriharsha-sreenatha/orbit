@@ -1,10 +1,26 @@
 using Orbit.CodeAnalysis.Syntax;
+using Orbit.CodeAnalysis.Text;
 using Xunit;
 
 namespace Orbit.Tests.CodeAnalysis.Syntax
 {
     public class LexerTests
     {
+        [Fact]
+        public void Lexer_Tests_UnterminatedString()
+        {
+            var text = "\"test";
+            var tokens = SyntaxTree.ParseTokens(text, out var diagnostics);
+
+            var token = Assert.Single(tokens);
+            Assert.Equal(SyntaxKind.StringToken, token.Kind);
+            Assert.Equal(text, token.Text);
+
+            var diagnostic = Assert.Single(diagnostics);
+            Assert.Equal(new TextSpan(0, 1), diagnostic.Span);
+            Assert.Equal("Unterminated string literal.", diagnostic.Message);
+        }
+
         [Fact]
         public void Lexer_Tests_AllTokens()
         {
@@ -105,6 +121,9 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
 
                 (SyntaxKind.IdentifierToken, "a"),
                 (SyntaxKind.IdentifierToken, "abc"),
+
+                (SyntaxKind.StringToken, "\"Test\""),
+                (SyntaxKind.StringToken, "\"Test \"\" Long String \"\" Here\""),
             };
 
             return fixedTokens.Concat(dynamicTokens);
@@ -142,6 +161,10 @@ namespace Orbit.Tests.CodeAnalysis.Syntax
             
             // 'number number'
             if (t1Kind == SyntaxKind.NumberToken && t2Kind == SyntaxKind.NumberToken)
+                return true;
+            
+            // 'string string'
+            if (t1Kind == SyntaxKind.StringToken && t2Kind == SyntaxKind.StringToken)
                 return true;
             
             // '!=' -> single token

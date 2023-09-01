@@ -239,7 +239,8 @@ namespace Orbit.CodeAnalysis.Syntax
 
                 case SyntaxKind.NumberToken:
                     return ParseLiteralExpression();
-                
+                case SyntaxKind.StringToken:
+                    return ParseStringExpression();
 
                 case SyntaxKind.IdentifierToken:
                 default:
@@ -272,6 +273,12 @@ namespace Orbit.CodeAnalysis.Syntax
         {
             var numberToken = MatchToken(SyntaxKind.NumberToken);
             return new LiteralExpressionSyntax(numberToken);
+        }
+
+        private ExpressionSyntax ParseStringExpression()
+        {
+            var stringToken = MatchToken(SyntaxKind.StringToken);
+            return new LiteralExpressionSyntax(stringToken);
         }
     }
 }

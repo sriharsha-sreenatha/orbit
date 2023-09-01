@@ -20,7 +20,7 @@ namespace Orbit.CodeAnalysis
 
         public object Evaluate()
         {
-            var labelIndex = new Dictionary<LabelSymbol, int>();
+            var labelIndex = new Dictionary<BoundLabel, int>();
 
             for (int i=0; i<_root.Statements.Length; i++)
             {

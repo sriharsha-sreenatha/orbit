@@ -12,10 +12,10 @@ namespace Orbit.CodeAnalysis.Lowering
             
         }
 
-        private LabelSymbol GenerateSymbol()
+        private BoundLabel GenerateSymbol()
         {
             var name = $"__Label{++_labelCount}__";
-            return new LabelSymbol(name);
+            return new BoundLabel(name);
         }
 
         public static BoundBlockStatement Lower(BoundStatement statement)

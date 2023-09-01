@@ -1,4 +1,5 @@
 using Orbit.CodeAnalysis;
+using Orbit.CodeAnalysis.Symbols;
 using Orbit.CodeAnalysis.Syntax;
 using Orbit.CodeAnalysis.Text;
 

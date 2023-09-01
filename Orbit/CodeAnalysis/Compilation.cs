@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Immutable;
 using Orbit.CodeAnalysis.Lowering;
+using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.CodeAnalysis
 {

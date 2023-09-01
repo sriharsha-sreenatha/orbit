@@ -1,6 +1,7 @@
 using Orbit.CodeAnalysis.Syntax;
 using Orbit.CodeAnalysis;
 using Xunit;
+using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.Tests.CodeAnalysis
 {

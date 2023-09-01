@@ -1,3 +1,5 @@
+using Orbit.CodeAnalysis.Symbols;
+
 namespace Orbit.CodeAnalysis.Binding
 {
     internal sealed class BoundVariableDeclaration : BoundStatement

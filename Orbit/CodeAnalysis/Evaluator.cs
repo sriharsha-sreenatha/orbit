@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Orbit.CodeAnalysis.Binding;
+using Orbit.CodeAnalysis.Symbols;
 using Orbit.CodeAnalysis.Syntax;
 
 namespace Orbit.CodeAnalysis

@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.CodeAnalysis.Binding
 {

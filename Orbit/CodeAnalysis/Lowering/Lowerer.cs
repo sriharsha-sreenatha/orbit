@@ -1,6 +1,7 @@
 
 using System.Collections.Immutable;
 using Orbit.CodeAnalysis.Binding;
+using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.CodeAnalysis.Lowering
 {

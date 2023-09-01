@@ -2,7 +2,6 @@ using Orbit.CodeAnalysis.Symbols;
 
 namespace Orbit.CodeAnalysis.Binding
 {
-
     internal sealed class BoundBinaryExpression : BoundExpression
     {
         public BoundBinaryExpression(BoundExpression left, BoundBinaryOperator op, BoundExpression right)

@@ -14,6 +14,7 @@ namespace Orbit.CodeAnalysis.Binding
         ForStatement,
 
         // Expressions
+        ErrorExpression,
         UnaryExpression,
         LiteralExpression,
         BinaryExpression,

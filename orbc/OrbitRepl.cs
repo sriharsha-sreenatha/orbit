@@ -19,9 +19,14 @@ namespace Orbit
             {
                 var isKeyword = token.Kind.ToString().EndsWith("Keyword");
                 var isNumber = token.Kind == SyntaxKind.NumberToken;
+                var isIdentifier = token.Kind == SyntaxKind.IdentifierToken;
                 if (isKeyword)
                     Console.ForegroundColor = ConsoleColor.Blue;
-                else if (!isNumber)
+                if (isIdentifier)
+                    Console.ForegroundColor = ConsoleColor.White;
+                else if (isNumber)
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                else
                     Console.ForegroundColor = ConsoleColor.DarkGray;
 
                 Console.Write(token.Text);
@@ -38,7 +43,8 @@ namespace Orbit
             
             var syntaxTree = SyntaxTree.Parse(text);
 
-            if (syntaxTree.Diagnostics.Any())
+            // Using Statement because we need to exclude EOF Token
+            if (syntaxTree.Root.Statement.GetLastToken().IsMissing)
                 return false;
 
             return true;

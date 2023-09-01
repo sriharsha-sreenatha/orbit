@@ -303,7 +303,16 @@ namespace Orbit
             var line = document[lineIndex];
             var start = view.CurrentCharacter;
             if (start == line.Length)
+            {
+                if (view.CurrentLineIndex == document.Count - 1)
+                    return;
+
+                var nextLine = document[view.CurrentLineIndex + 1];
+                document[view.CurrentLineIndex] += nextLine;
+                document.RemoveAt(view.CurrentLineIndex + 1);
+
                 return;
+            }
             
             var beforeChar = line.Substring(0, start);
             var afterChar = line.Substring(start + 1);
@@ -355,6 +364,10 @@ namespace Orbit
 
         private void UpdateDocumentFromHistory(ObservableCollection<string> document, SubmissionView view)
         {
+            // Graceful exit if no history
+            if (_submissionHistory.Count == 0)
+                return;
+            
             document.Clear();
             var submission = _submissionHistory[_submissionHistoryIndex];
             var lines = submission.Split(Environment.NewLine);

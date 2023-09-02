@@ -58,23 +58,16 @@ namespace Orbit.CodeAnalysis.Binding
 
         private BoundStatement BindStatement(StatementSyntax syntax)
         {
-            switch(syntax.Kind)
+            return syntax.Kind switch
             {
-                case SyntaxKind.BlockStatement:
-                    return BindBlockStatement((BlockStatementSyntax)syntax);
-                case SyntaxKind.ExpressionStatement:
-                    return BindExpressionStatement((ExpressionStatementSyntax)syntax);
-                case SyntaxKind.VariableDeclaration:
-                    return BindVariableDeclaration((VariableDeclarationSyntax)syntax);
-                case SyntaxKind.IfStatement:
-                    return BindIfStatement((IfStatementSyntax)syntax);
-                case SyntaxKind.WhileStatement:
-                    return BindWhileStatement((WhileStatementSyntax)syntax);
-                case SyntaxKind.ForStatement:
-                    return BindForStatement((ForStatementSyntax)syntax);
-                default:
-                    throw new Exception($"Unexpected syntax {syntax.Kind}");
-            }
+                SyntaxKind.BlockStatement => BindBlockStatement((BlockStatementSyntax)syntax),
+                SyntaxKind.ExpressionStatement => BindExpressionStatement((ExpressionStatementSyntax)syntax),
+                SyntaxKind.VariableDeclaration => BindVariableDeclaration((VariableDeclarationSyntax)syntax),
+                SyntaxKind.IfStatement => BindIfStatement((IfStatementSyntax)syntax),
+                SyntaxKind.WhileStatement => BindWhileStatement((WhileStatementSyntax)syntax),
+                SyntaxKind.ForStatement => BindForStatement((ForStatementSyntax)syntax),
+                _ => throw new Exception($"Unexpected syntax {syntax.Kind}"),
+            };
         }
 
         private BoundStatement BindWhileStatement(WhileStatementSyntax syntax)
@@ -91,12 +84,7 @@ namespace Orbit.CodeAnalysis.Binding
             
             _scope = new BoundScope(_scope); // Scope of for statement
             
-            var name = syntax.Identifier.Text;
-            var variable = new VariableSymbol(name, true, TypeSymbol.Int);
-            
-            if (!_scope.TryDeclare(variable))
-                _diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name); // Impossible
-
+            var variable = BindVariable(syntax.Identifier, isReadOnly: true, TypeSymbol.Int);
             var body = BindStatement(syntax.Body);
 
             _scope = _scope.Parent; // Out of for scope
@@ -129,14 +117,10 @@ namespace Orbit.CodeAnalysis.Binding
 
         private BoundStatement BindVariableDeclaration(VariableDeclarationSyntax syntax)
         {
-            var name = syntax.Identifier.Text;
             var isReadOnly = syntax.Keyword.Kind == SyntaxKind.LetKeyword;
             var initializer = BindExpression(syntax.Initializer);
-            var variable = new VariableSymbol(name, isReadOnly, initializer.Type);
+            var variable = BindVariable(syntax.Identifier, isReadOnly, initializer.Type);
             
-            if (!_scope.TryDeclare(variable))
-                _diagnostics.ReportVariableAlreadyDeclared(syntax.Identifier.Span, name);
-
             return new BoundVariableDeclaration(variable, initializer);
         }
 
@@ -149,7 +133,9 @@ namespace Orbit.CodeAnalysis.Binding
         private BoundExpression BindExpression(ExpressionSyntax syntax, TypeSymbol targetType)
         {
             var result = BindExpression(syntax);
-            if (result.Type != targetType)
+            if (targetType != TypeSymbol.Error &&
+                result.Type != TypeSymbol.Error &&
+                result.Type != targetType)
                 _diagnostics.ReportCannotConvert(syntax.Span, result.Type, targetType);
             
             return result;
@@ -157,25 +143,17 @@ namespace Orbit.CodeAnalysis.Binding
 
         private BoundExpression BindExpression(ExpressionSyntax syntax)
         {
-            switch(syntax.Kind)
+            return syntax.Kind switch
             {
-                case SyntaxKind.LiteralExpression:
-                    return BindLiteralExpression((LiteralExpressionSyntax)syntax);
-                case SyntaxKind.BinaryExpression:
-                    return BindBinaryExpression((BinaryExpressionSyntax)syntax);
-                case SyntaxKind.UnaryExpression:
-                    return BindUnaryExpression((UnaryExpressionSyntax)syntax);
-                case SyntaxKind.ParenthesizedExpression:
-                    return BindParenthesizedExpression((ParenthesizedExpressionSyntax)syntax);
-                case SyntaxKind.NameExpression:
-                    return BindNameExpression((NameExpressionSyntax)syntax);
-                case SyntaxKind.AssignmentExpression:
-                    return BindAssignmentExpression((AssignmentExpressionSyntax)syntax);
-                case SyntaxKind.OperatorAssignmentExpression:
-                    return BindOperatorAssignmentExpression((OperatorAssignmentExpressionSyntax)syntax);
-                default:
-                    throw new Exception($"Unexpected syntax {syntax.Kind}");
-            }
+                SyntaxKind.LiteralExpression => BindLiteralExpression((LiteralExpressionSyntax)syntax),
+                SyntaxKind.BinaryExpression => BindBinaryExpression((BinaryExpressionSyntax)syntax),
+                SyntaxKind.UnaryExpression => BindUnaryExpression((UnaryExpressionSyntax)syntax),
+                SyntaxKind.ParenthesizedExpression => BindParenthesizedExpression((ParenthesizedExpressionSyntax)syntax),
+                SyntaxKind.NameExpression => BindNameExpression((NameExpressionSyntax)syntax),
+                SyntaxKind.AssignmentExpression => BindAssignmentExpression((AssignmentExpressionSyntax)syntax),
+                SyntaxKind.OperatorAssignmentExpression => BindOperatorAssignmentExpression((OperatorAssignmentExpressionSyntax)syntax),
+                _ => throw new Exception($"Unexpected syntax {syntax.Kind}"),
+            };
         }
 
         private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax)
@@ -192,7 +170,7 @@ namespace Orbit.CodeAnalysis.Binding
         private BoundExpression BindNameExpression(NameExpressionSyntax syntax)
         {
             var name = syntax.IdentifierToken.Text;
-            if (string.IsNullOrEmpty(name))
+            if (syntax.IdentifierToken.IsMissing)
             {
                 return new BoundErrorExpression();
             }
@@ -290,6 +268,17 @@ namespace Orbit.CodeAnalysis.Binding
             }
             return new BoundBinaryExpression(boundLeft, boundOp, boundRight);
         }
-
+        
+        private VariableSymbol BindVariable(SyntaxToken identifier, bool isReadOnly, TypeSymbol type)
+        {
+            var name = identifier.Text ?? "?";
+            var shouldDeclare = !identifier.IsMissing;
+            var variable = new VariableSymbol(name, isReadOnly, type);
+            
+            if (shouldDeclare && !_scope.TryDeclare(variable))
+                _diagnostics.ReportVariableAlreadyDeclared(identifier.Span, name);
+            
+            return variable;
+        }
     }
 }

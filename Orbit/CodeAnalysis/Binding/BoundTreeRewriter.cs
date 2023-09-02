@@ -6,29 +6,19 @@ namespace Orbit.CodeAnalysis.Binding
     {
         public virtual BoundStatement RewriteStatement(BoundStatement node)
         {
-            switch (node.Kind)
+            return node.Kind switch
             {
-                case BoundNodeKind.BlockStatement:
-                    return RewriteBlockStatement((BoundBlockStatement)node);
-                case BoundNodeKind.ExpressionStatement:
-                    return RewriteExpressionStatement((BoundExpressionStatement)node);
-                case BoundNodeKind.VariableDeclaration:
-                    return RewriteVariableDeclaration((BoundVariableDeclaration)node);
-                case BoundNodeKind.LabelStatement:
-                    return RewriteLabelStatement((BoundLabelStatement)node);
-                case BoundNodeKind.GotoStatement:
-                    return RewriteGotoStatement((BoundGotoStatement)node);
-                case BoundNodeKind.ConditionalGotoStatement:
-                    return RewriteConditionalGotoStatement((BoundConditionalGotoStatement)node);
-                case BoundNodeKind.IfStatement:
-                    return RewriteIfStatement((BoundIfStatement)node);
-                case BoundNodeKind.WhileStatement:
-                    return RewriteWhileStatement((BoundWhileStatement)node);
-                case BoundNodeKind.ForStatement:
-                    return RewriteForStatement((BoundForStatement)node);
-                default:
-                    throw new Exception($"Unexpected node {node.Kind}");
-            }
+                BoundNodeKind.BlockStatement => RewriteBlockStatement((BoundBlockStatement)node),
+                BoundNodeKind.ExpressionStatement => RewriteExpressionStatement((BoundExpressionStatement)node),
+                BoundNodeKind.VariableDeclaration => RewriteVariableDeclaration((BoundVariableDeclaration)node),
+                BoundNodeKind.LabelStatement => RewriteLabelStatement((BoundLabelStatement)node),
+                BoundNodeKind.GotoStatement => RewriteGotoStatement((BoundGotoStatement)node),
+                BoundNodeKind.ConditionalGotoStatement => RewriteConditionalGotoStatement((BoundConditionalGotoStatement)node),
+                BoundNodeKind.IfStatement => RewriteIfStatement((BoundIfStatement)node),
+                BoundNodeKind.WhileStatement => RewriteWhileStatement((BoundWhileStatement)node),
+                BoundNodeKind.ForStatement => RewriteForStatement((BoundForStatement)node),
+                _ => throw new Exception($"Unexpected node {node.Kind}"),
+            };
         }
 
         private BoundStatement RewriteLabelStatement(BoundLabelStatement node)
@@ -130,23 +120,22 @@ namespace Orbit.CodeAnalysis.Binding
 
         public virtual BoundExpression RewriteExpression(BoundExpression node)
         {
-            switch (node.Kind)
+            return node.Kind switch
             {
-                case BoundNodeKind.UnaryExpression:
-                    return RewriteUnaryExpression((BoundUnaryExpression)node);
-                case BoundNodeKind.LiteralExpression:
-                    return RewriteLiteralExpression((BoundLiteralExpression)node);
-                case BoundNodeKind.BinaryExpression:
-                    return RewriteBinaryExpression((BoundBinaryExpression)node);
-                case BoundNodeKind.VariableExpression:
-                    return RewriteVariableExpression((BoundVariableExpression)node);
-                case BoundNodeKind.AssignmentExpression:
-                    return RewriteAssignmentExpression((BoundAssignmentExpression)node);
-                case BoundNodeKind.OperatorAssignmentExpression:
-                    return RewriteOperatorAssignmentExpression((BoundOperatorAssignmentExpression)node);
-                default:
-                    throw new Exception($"Unexpected node {node.Kind}");
-            }
+                BoundNodeKind.ErrorExpression => RewriteErrorExpression((BoundErrorExpression)node),
+                BoundNodeKind.UnaryExpression => RewriteUnaryExpression((BoundUnaryExpression)node),
+                BoundNodeKind.LiteralExpression => RewriteLiteralExpression((BoundLiteralExpression)node),
+                BoundNodeKind.BinaryExpression => RewriteBinaryExpression((BoundBinaryExpression)node),
+                BoundNodeKind.VariableExpression => RewriteVariableExpression((BoundVariableExpression)node),
+                BoundNodeKind.AssignmentExpression => RewriteAssignmentExpression((BoundAssignmentExpression)node),
+                BoundNodeKind.OperatorAssignmentExpression => RewriteOperatorAssignmentExpression((BoundOperatorAssignmentExpression)node),
+                _ => throw new Exception($"Unexpected node {node.Kind}"),
+            };
+        }
+
+        protected virtual BoundExpression RewriteErrorExpression(BoundErrorExpression node)
+        {
+            return node;
         }
 
         protected virtual BoundExpression RewriteLiteralExpression(BoundLiteralExpression node)

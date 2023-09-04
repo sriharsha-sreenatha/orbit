@@ -44,6 +44,10 @@ namespace Orbit.CodeAnalysis.Binding
             new BoundBinaryOperator(SyntaxKind.MinusEqualsToken, BoundBinaryOperatorKind.SubtractionAssignment, TypeSymbol.Int),
             new BoundBinaryOperator(SyntaxKind.StarEqualsToken, BoundBinaryOperatorKind.MultiplicationAssignment, TypeSymbol.Int),
             new BoundBinaryOperator(SyntaxKind.SlashEqualsToken, BoundBinaryOperatorKind.DivisionAssignment, TypeSymbol.Int),
+
+            // For string concats
+            new BoundBinaryOperator(SyntaxKind.PlusToken, BoundBinaryOperatorKind.Addition, TypeSymbol.String),
+            new BoundBinaryOperator(SyntaxKind.PlusEqualsToken, BoundBinaryOperatorKind.AdditionAssignment, TypeSymbol.String),
             
             new BoundBinaryOperator(SyntaxKind.AmpersandToken, BoundBinaryOperatorKind.BitwiseAnd, TypeSymbol.Int),
             new BoundBinaryOperator(SyntaxKind.PipeToken, BoundBinaryOperatorKind.BitwiseOr, TypeSymbol.Int),

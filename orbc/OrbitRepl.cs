@@ -20,11 +20,14 @@ namespace Orbit
             {
                 var isKeyword = token.Kind.ToString().EndsWith("Keyword");
                 var isNumber = token.Kind == SyntaxKind.NumberToken;
+                var isString = token.Kind == SyntaxKind.StringToken;
                 var isIdentifier = token.Kind == SyntaxKind.IdentifierToken;
                 if (isKeyword)
                     Console.ForegroundColor = ConsoleColor.Blue;
                 else if (isIdentifier)
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                else if (isString)
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                 else if (isNumber)
                     Console.ForegroundColor = ConsoleColor.Cyan;
                 else
@@ -93,7 +96,7 @@ namespace Orbit
             
             if (!result.Diagnostics.Any())
             {
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(result.Value);
                 Console.ResetColor();
 

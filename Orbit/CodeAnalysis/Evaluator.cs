@@ -124,8 +124,18 @@ namespace Orbit.CodeAnalysis
             switch (a.Operator.Kind)
             {
                 case BoundBinaryOperatorKind.AdditionAssignment:
-                    _variables[a.Variable] = (int)prevValue + (int)rightValue;
-                    return _variables[a.Variable];
+                    if (a.Type == TypeSymbol.Int)
+                    {
+                        _variables[a.Variable] = (int)prevValue + (int)rightValue;
+                        return _variables[a.Variable];
+                    }
+                    else if (a.Type == TypeSymbol.String)
+                    {
+                        _variables[a.Variable] = (string)prevValue + (string)rightValue;
+                        return _variables[a.Variable];
+                    }
+                    else
+                        throw new Exception($"Unexpected binary {a.Operator.Kind} expression for type '{a.Type}'\n");
                 case BoundBinaryOperatorKind.SubtractionAssignment:
                     _variables[a.Variable] = (int)prevValue - (int)rightValue;
                     return _variables[a.Variable];
@@ -169,7 +179,12 @@ namespace Orbit.CodeAnalysis
             switch (b.Operator.Kind)
             {
                 case BoundBinaryOperatorKind.Addition:
-                    return (int)left + (int)right;
+                    if (b.Type == TypeSymbol.Int) 
+                        return (int)left + (int)right;
+                    else if (b.Type == TypeSymbol.String)
+                        return (string)left + (string)right;
+                    else
+                        throw new Exception($"Unexpected binary {b.Operator.Kind} expression for type '{b.Type}'\n");
                 case BoundBinaryOperatorKind.Subtraction:
                     return (int)left - (int)right;
                 case BoundBinaryOperatorKind.Multiplication:

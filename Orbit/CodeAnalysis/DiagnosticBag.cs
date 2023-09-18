@@ -98,9 +98,15 @@ namespace Orbit.CodeAnalysis
             Report(span, message);
         }
 
-        internal void ReportWrongArgumentType(TextSpan span, string funcName, string paramName, TypeSymbol paramType, TypeSymbol argType)
+        public void ReportWrongArgumentType(TextSpan span, string funcName, string paramName, TypeSymbol paramType, TypeSymbol argType)
         {
             var message = $"In function '{funcName}', parameter '{paramName}' requires a value of type '{paramType}' but was given a value of type '{argType}'.";
+            Report(span, message);
+        }
+
+        public void ReportExpressionMustHaveValue(TextSpan span)
+        {
+            var message = "Expression must have a value.";
             Report(span, message);
         }
     }

@@ -44,6 +44,15 @@ namespace Orbit
         {
             if (string.IsNullOrEmpty(text))
                 return true;
+
+            var lastTwoLinesAreBlank = text.Split(Environment.NewLine)
+                                        .Reverse()
+                                        .TakeWhile(s => string.IsNullOrEmpty(s))
+                                        .Take(2)
+                                        .Count() == 2;
+                                        
+            if (lastTwoLinesAreBlank)
+                return true;
             
             var syntaxTree = SyntaxTree.Parse(text);
 
@@ -96,9 +105,12 @@ namespace Orbit
             
             if (!result.Diagnostics.Any())
             {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(result.Value);
-                Console.ResetColor();
+                if (result.Value != null)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(result.Value);
+                    Console.ResetColor();
+                }
 
                 _previous = compilation;
             }

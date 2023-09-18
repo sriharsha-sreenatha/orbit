@@ -34,7 +34,7 @@ namespace Orbit.CodeAnalysis.Syntax
         LessToken,
         GreaterOrEqualsToken,
         GreaterToken,
-
+        CommaToken,
         IdentifierToken,
         
         // Keywords
@@ -72,5 +72,6 @@ namespace Orbit.CodeAnalysis.Syntax
         UnaryExpression,
         BinaryExpression,
         ParenthesizedExpression,
+        CallExpression,
     }
 }

@@ -209,15 +209,6 @@ namespace Orbit
                         break;
                 }
             }
-            if (key.Modifiers == ConsoleModifiers.Shift)
-            {
-                switch (key.Key)
-                {
-                    case ConsoleKey.Enter:
-                        _submitted = true;
-                        break;
-                }
-            }
             if (key.KeyChar >= ' ')
                 HandleTyping(document, view, key.KeyChar.ToString());
         }

@@ -85,5 +85,23 @@ namespace Orbit.CodeAnalysis
             var message = $"Cannot assign value to read-only variable '{name}'.";
             Report(span, message);
         }
+
+        public void ReportUndefinedFunction(TextSpan span, string name)
+        {
+            var message = $"Function '{name}' doesn't exist.";
+            Report(span, message);
+        }
+
+        public void ReportWrongArgumentCount(TextSpan span, string name, int expected, int actual)
+        {
+            var message = $"Function '{name}' requires {expected} arguments but was given {actual}.";
+            Report(span, message);
+        }
+
+        internal void ReportWrongArgumentType(TextSpan span, string funcName, string paramName, TypeSymbol paramType, TypeSymbol argType)
+        {
+            var message = $"In function '{funcName}', parameter '{paramName}' requires a value of type '{paramType}' but was given a value of type '{argType}'.";
+            Report(span, message);
+        }
     }
 }

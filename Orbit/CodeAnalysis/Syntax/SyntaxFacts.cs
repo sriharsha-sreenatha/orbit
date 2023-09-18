@@ -155,6 +155,8 @@ namespace Orbit.CodeAnalysis.Syntax
                     return "{";
                 case SyntaxKind.CloseBraceToken: 
                     return "}";
+                case SyntaxKind.CommaToken: 
+                    return ",";
                 case SyntaxKind.NotEqualsToken: 
                     return "!=";
                 case SyntaxKind.DoubleEqualsToken: 

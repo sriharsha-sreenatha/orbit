@@ -121,6 +121,10 @@ namespace Orbit.CodeAnalysis.Syntax
                     _kind = SyntaxKind.CloseBraceToken;
                     _position++;
                     break;
+                case ',':
+                    _kind = SyntaxKind.CommaToken;
+                    _position++;
+                    break;
                 case '^':
                     _kind = SyntaxKind.HatToken;
                     _position++;

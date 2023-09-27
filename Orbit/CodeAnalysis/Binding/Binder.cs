@@ -182,6 +182,9 @@ namespace Orbit.CodeAnalysis.Binding
 
         private BoundExpression BindCallExpression(CallExpressionSyntax syntax)
         {
+            if (syntax.Arguments.Count == 1 && LookupType(syntax.Identifier.Text) is TypeSymbol type)
+                return BindConversion(type, syntax.Arguments[0]);
+            
             var boundArguments = ImmutableArray.CreateBuilder<BoundExpression>();
 
             foreach (var argument in syntax.Arguments)
@@ -216,6 +219,20 @@ namespace Orbit.CodeAnalysis.Binding
             }
 
             return new BoundCallExpression(function, boundArguments.ToImmutable());
+        }
+
+        private BoundExpression BindConversion(TypeSymbol type, ExpressionSyntax syntax)
+        {
+            var expression = BindExpression(syntax);
+            var conversion = Conversion.Classify(expression.Type, type);
+
+            if (!conversion.Exists)
+            {
+                _diagnostics.ReportCannotConvert(syntax.Span, expression.Type, type);
+                return new BoundErrorExpression();
+            }
+
+            return new BoundConversionExpression(type, expression);
         }
 
         private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax)
@@ -341,6 +358,17 @@ namespace Orbit.CodeAnalysis.Binding
                 _diagnostics.ReportVariableAlreadyDeclared(identifier.Span, name);
             
             return variable;
+        }
+
+        private TypeSymbol LookupType(string name)
+        {
+            return name switch
+            {
+                "bool" => TypeSymbol.Bool,
+                "int" => TypeSymbol.Int,
+                "string" => TypeSymbol.String,
+                _ => null,
+            };
         }
     }
 }

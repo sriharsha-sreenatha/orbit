@@ -130,6 +130,7 @@ namespace Orbit.CodeAnalysis.Binding
                 BoundNodeKind.AssignmentExpression => RewriteAssignmentExpression((BoundAssignmentExpression)node),
                 BoundNodeKind.OperatorAssignmentExpression => RewriteOperatorAssignmentExpression((BoundOperatorAssignmentExpression)node),
                 BoundNodeKind.CallExpression => RewriteCallExpression((BoundCallExpression)node),
+                BoundNodeKind.ConversionExpression => RewriteConversionExpression((BoundConversionExpression)node),
                 _ => throw new Exception($"Unexpected node {node.Kind}"),
             };
         }
@@ -212,6 +213,15 @@ namespace Orbit.CodeAnalysis.Binding
                 return node;
             
             return new BoundBinaryExpression(left, node.Operator, right);
+        }
+
+        protected virtual BoundExpression RewriteConversionExpression(BoundConversionExpression node)
+        {
+            var expression = RewriteExpression(node.Expression);
+            if (expression == node.Expression)
+                return node;
+            
+            return new BoundConversionExpression(node.Type, expression);
         }
     }
 }
